@@ -1,0 +1,16 @@
+<strings>
+	<string id="authorBy">von</string>
+	
+    <string id="actionPickerTitle">Aktion</string>
+    <string id="actionPickerSwitch">An/Aus</string>
+    <string id="actionPickerBrightness">Hellig-\nkeit</string>
+    <string id="actionPickerColor">Farbe</string>
+
+    <string id="switchPickerTitle">An/Aus</string>
+    <string id="switchPickerOn">An</string>
+    <string id="switchPickerOff">Aus</string>
+
+    <string id="brightnessPickerTitle">Helligkeit</string>
+    
+    <string id="colorPickerTitle">Farbe</string>
+</strings>
