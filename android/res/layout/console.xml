@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:gravity="center">
+
+    <ScrollView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.7">
+
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:padding="10dp"
+                      android:orientation="vertical">
+
+
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:textColor="@android:color/darker_gray"
+                      android:text="@string/console_device_name"/>
+
+            <TextView android:id="@+id/devicename"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:textColor="@android:color/white"
+                      tools:text="fenix 3"/>
+
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:textColor="@android:color/darker_gray"
+                      android:text="@string/console_device_status"/>
+
+            <TextView android:id="@+id/devicestatus"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:textColor="@android:color/white"
+                      tools:text="CONNECTED"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:layout_weight="0.3"
+                  android:padding="10dp"
+                  android:orientation="vertical">
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceMedium"
+                  android:textColor="@android:color/darker_gray"
+                  android:gravity="top"
+                  android:text="@string/console_actionlog"/>
+
+        <ScrollView android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+            <TextView android:id="@+id/actionlog"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"
+                      android:textColor="@android:color/white"
+                      android:minLines="3"
+                      android:maxLines="500"
+                      android:padding="5dp"
+                      android:scrollbars="vertical"
+                      android:gravity="bottom"
+                      tools:text="switch_on\nswitch_off\nbrightness_10\nbrightness_20\nbrightness_30\nbrightness_40\nbrightness_50\nbrightness_60\nbrightness_70\nbrightness_80\nbrightness_90\nbrightness_100\ncolor_red\ncolor_blue\ncolor_green\ncolor_yellow\ncolor_orange\ncolor_purple"/>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

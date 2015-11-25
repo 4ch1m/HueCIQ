@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/clear_log"
+          android:title="@string/menu_clear_log"
+          android:showAsAction="never"/>
+    <item android:id="@+id/close_app"
+          android:title="@string/menu_exit_app"
+          android:showAsAction="never"/>
+</menu>

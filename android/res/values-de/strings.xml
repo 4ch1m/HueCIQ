@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="main_info"><![CDATA[Stelle bitte sicher, dass &#8230;<br/><br/>&#8226; Dein <a href="http://www2.meethue.com">Philips Hue</a> Lichtsystem läuft<br/><br/>&#8226; Du die <a href="https://play.google.com/store/apps/details?id=com.garmin.android.apps.connectmobile">Garmin Connect Mobile</a> App installiert und gestartet hast<br/><br/>&#8226; Dein <a href="http://developer.garmin.com/connect-iq/compatible-devices/">Garmin ConnectIQ</a>-Gerät mit der <a href="https://play.google.com/store/apps/details?id=com.garmin.android.apps.connectmobile">Garmin Connect Mobile</a> App verbunden ist<br/><br/>&#8226; Du die <a href="https://apps.garmin.com/en-US/search?q=hueciq&device=&deviceLimit=&appType=&sort=&start=0&count=12">%1s</a>-App auf Deinem <a href="http://developer.garmin.com/connect-iq/compatible-devices/">Garmin ConnectIQ</a>-Gerät installiert hast]]></string>
+    <string name="about_text"><![CDATA[Erstellt von <b>%s</b>.<br/><br/>Webseite:<br/><a href="http://hueciq.achimonline.de">hueciq.achimonline.de</a>"]]></string>
+    <string name="cached_bridge_info_cleared">Zwischengespeicherte Bridge-Infos bereinigt.</string>
+
+    <!-- *** -->
+
+    <string name="bridgelist_title">Verfügbare Bridges</string>
+    <string name="bridgelist_select_bridge">Bitte eine Bridge zur Nutzung dieser App suchen und auswählen.</string>
+
+    <string name="pushlinkauthentication_title">Authentifizierung</string>
+    <string name="pushlinkauthentication_text">Bitten den Knopf an der Brücke drücken.</string>
+
+    <string name="menu_clear_cached_bridge_info">Zwischengespeicherte Bridge-Infos bereinigen</string>
+    <string name="menu_about">Über</string>
+    <string name="menu_find_new_bridge">Neue Bridge suchen</string>
+
+    <string name="searching">Suche &#8230;</string>
+    <string name="connecting">Verbinde &#8230;</string>
+    <string name="error">Fehler</string>
+
+    <!-- *** -->
+
+    <string name="devicelist_title">Verfügbare ConnectIQ-Geräte</string>
+    <string name="devicelist_select_device">Bitte ein Gerät zur Nutzung dieser App suchen und auswählen.</string>
+
+    <string name="menu_load_devices">ConnectIQ-Geräte suchen</string>
+    <string name="device_has_to_be_connected">Das Gerät muss verbunden sein, um fortfahren zu können.</string>
+
+    <string name="initialization_error">Fehler beim Initialisieren des ConnectIQ-SDK.</string>
+    <string name="service_unavailable">Der ConnectIQ-Dienst ist nicht verfügbar.</string>
+    <string name="missing_ciq_app">Fehlende ConnectIQ-App</string>
+    <string name="missing_ciq_app_message">Die zu dieser Android-App passende ConnectIQ-App ist auf dem ConnectIQ-Gerät nicht installiert. Bitten installieren und erneut versuchen.</string>
+
+    <!-- *** -->
+
+    <string name="console_title">HueCIQ Konsole</string>
+    <string name="console_device_name">Gerätename:</string>
+    <string name="console_device_status">Gerätestatus:</string>
+    <string name="console_actionlog">Aktionen:</string>
+
+    <string name="menu_clear_log">Log löschen</string>
+    <string name="menu_exit_app">%1$s beenden</string>
+
+</resources>

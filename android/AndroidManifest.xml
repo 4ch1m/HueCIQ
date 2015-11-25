@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="de.achimonline.hueciq"
+          android:versionCode="2"
+          android:versionName="1.1">
+
+    <uses-sdk android:minSdkVersion="11"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+
+    <application android:label="@string/app_name"
+                 android:icon="@drawable/ic_launcher">
+
+        <activity android:name=".Main"
+                  android:label="@string/app_name">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".BridgeList" />
+
+        <activity android:name=".PushLinkAuthentication" />
+
+        <activity android:name=".Console" />
+
+        <activity android:name=".DeviceList" />
+
+        <service android:name=".ListenerService"
+                 android:exported="false"/>
+
+    </application>
+
+</manifest>

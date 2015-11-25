@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:theme="@android:style/Theme.Dialog"
+              android:minWidth="300dp">
+
+    <ListView android:id="@+id/android:list"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:cacheColorHint="@android:color/black"
+              android:focusable="true"
+              android:choiceMode="singleChoice"
+              android:dividerHeight="3sp"
+              android:layout_marginLeft="2dp"
+              android:layout_marginRight="2dp"
+              android:layout_marginTop="3dp"/>
+
+    <TextView android:id="@android:id/empty"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center|center_vertical"
+              android:layout_marginTop="15dp"
+              android:gravity="center_horizontal"
+              android:paddingLeft="20dp"
+              android:paddingRight="20dp"
+              android:text="@string/bridgelist_select_bridge"
+              android:textAppearance="?android:attr/textAppearanceSmall"
+              android:textColor="@android:color/white"/>
+
+</LinearLayout>
