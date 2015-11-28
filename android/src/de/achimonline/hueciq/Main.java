@@ -25,7 +25,7 @@ import java.util.Arrays;
 
 public class Main extends Activity
 {
-    private static final String LOG_PREFIX = Main.class.getName() + " - ";
+    private static final String LOG_PREFIX = Main.class.getSimpleName() + " - ";
 
     private PHHueSDK phHueSDK;
     private SharedPreferences sharedPreferences;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="main_info"><![CDATA[Stelle bitte sicher, dass &#8230;<br/><br/>&#8226; Dein <a href="http://www2.meethue.com">Philips Hue</a> Lichtsystem läuft<br/><br/>&#8226; Du die <a href="https://play.google.com/store/apps/details?id=com.garmin.android.apps.connectmobile">Garmin Connect Mobile</a> App installiert und gestartet hast<br/><br/>&#8226; Dein <a href="http://developer.garmin.com/connect-iq/compatible-devices/">Garmin ConnectIQ</a>-Gerät mit der <a href="https://play.google.com/store/apps/details?id=com.garmin.android.apps.connectmobile">Garmin Connect Mobile</a> App verbunden ist<br/><br/>&#8226; Du die <a href="https://apps.garmin.com/en-US/search?q=hueciq&device=&deviceLimit=&appType=&sort=&start=0&count=12">%1s</a>-App auf Deinem <a href="http://developer.garmin.com/connect-iq/compatible-devices/">Garmin ConnectIQ</a>-Gerät installiert hast]]></string>
+    <string name="main_info"><![CDATA[Stelle bitte sicher, dass &#8230;<br/><br/>&#8226; Dein <a href="http://www2.meethue.com">Philips Hue</a> Lichtsystem läuft<br/><br/>&#8226; Du die <a href="https://play.google.com/store/apps/details?id=com.garmin.android.apps.connectmobile">Garmin Connect Mobile</a> App installiert und gestartet hast<br/><br/>&#8226; Dein <a href="http://developer.garmin.com/connect-iq/compatible-devices/">Garmin ConnectIQ</a>-Gerät mit der <a href="https://play.google.com/store/apps/details?id=com.garmin.android.apps.connectmobile">Garmin Connect Mobile</a> App verbunden ist<br/><br/>&#8226; Du die <a href="https://apps.garmin.com/en-US/apps/db18ce76-bcdc-4c29-852c-3af9a8caed1d">%1s</a>-App auf Deinem <a href="http://developer.garmin.com/connect-iq/compatible-devices/">Garmin ConnectIQ</a>-Gerät installiert hast]]></string>
     <string name="about_text"><![CDATA[Erstellt von <b>%s</b>.<br/><br/>Webseite:<br/><a href="http://hueciq.achimonline.de">hueciq.achimonline.de</a>"]]></string>
     <string name="cached_bridge_info_cleared">Zwischengespeicherte Bridge-Infos bereinigt.</string>
 
@@ -38,7 +38,6 @@
 
     <string name="console_title">HueCIQ Konsole</string>
     <string name="console_device_name">Gerätename:</string>
-    <string name="console_device_status">Gerätestatus:</string>
     <string name="console_actionlog">Aktionen:</string>
 
     <string name="menu_clear_log">Log löschen</string>

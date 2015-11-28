@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import com.garmin.android.connectiq.ConnectIQ;
 import com.garmin.android.connectiq.IQApp;
@@ -20,11 +22,13 @@ import com.garmin.android.connectiq.IQDevice;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Stack;
 
 public class Console extends Activity
 {
-    private static final String LOG_PREFIX = Console.class.getName() + " - ";
+    private static final String LOG_PREFIX = Console.class.getSimpleName() + " - ";
+
+    private static final String STATE_ACTION_LOG = "actionLog";
+    private static final String STATE_SERVICE_STARTED = "serviceStarted";
 
     public static final String EXTRA_IQDEVICE = "IQDevice";
 
@@ -33,14 +37,12 @@ public class Console extends Activity
     private ConnectIQ connectIQ;
     private IQDevice iqDevice;
 
-    private Intent serviceIntent;
-    private ServiceBroadcastReceiver serviceBroadcastReceiver;
-
     private TextView deviceNameView;
-    private TextView deviceStatusView;
     private TextView actionLog;
 
-    private SizedStack<String> stack;
+    private ServiceBroadcastReceiver serviceBroadcastReceiver;
+
+    private boolean serviceStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,45 +58,72 @@ public class Console extends Activity
         iqDevice = (IQDevice) getIntent().getParcelableExtra(EXTRA_IQDEVICE);
 
         deviceNameView = (TextView) findViewById(R.id.devicename);
-        deviceStatusView = (TextView) findViewById(R.id.devicestatus);
 
         actionLog = (TextView) findViewById(R.id.actionlog);
         actionLog.setMovementMethod(new ScrollingMovementMethod());
+        actionLog.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+            }
 
-        stack = new SizedStack<String>(Constants.ACTION_LOG_SIZE);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                ((ScrollView)findViewById(R.id.actionlog_scrollview)).fullScroll(ScrollView.FOCUS_DOWN);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+            }
+        });
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        serviceBroadcastReceiver = new ServiceBroadcastReceiver();
+
+        LocalBroadcastManager.getInstance(context).registerReceiver(serviceBroadcastReceiver, new IntentFilter(ListenerService.BROADCAST_ACTION));
 
         if (iqDevice != null)
         {
             deviceNameView.setText(iqDevice.getFriendlyName());
-            deviceStatusView.setText(iqDevice.getStatus().name());
 
-            connectIQ = ConnectIQ.getInstance(this, ConnectIQ.IQConnectType.WIRELESS);
-            connectIQ.initialize(this, true, new ConnectIQ.ConnectIQListener()
+            if (!serviceStarted)
             {
-                @Override
-                public void onSdkReady()
+                connectIQ = ConnectIQ.getInstance(this, ConnectIQ.IQConnectType.WIRELESS);
+                connectIQ.initialize(this, true, new ConnectIQ.ConnectIQListener()
                 {
-                    getCIQApplicationInfoAndStartService();
-                }
-
-                @Override
-                public void onInitializeError(ConnectIQ.IQSdkErrorStatus iqSdkErrorStatus)
-                {
-                    if (Constants.LOG_ACTIVE)
+                    @Override
+                    public void onSdkReady()
                     {
-                        Log.e(getString(R.string.app_log_tag), LOG_PREFIX + "Error while trying to initialize CIQ-SDK.");
+                        getCIQApplicationInfoAndStartService();
                     }
-                }
 
-                @Override
-                public void onSdkShutDown()
-                {
-                    if (Constants.LOG_ACTIVE)
+                    @Override
+                    public void onInitializeError(ConnectIQ.IQSdkErrorStatus iqSdkErrorStatus)
                     {
-                        Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "Shutting down CIQ-SDK.");
+                        if (Constants.LOG_ACTIVE)
+                        {
+                            Log.e(getString(R.string.app_log_tag), LOG_PREFIX + "Error while trying to initialize CIQ-SDK.");
+                        }
                     }
-                }
-            });
+
+                    @Override
+                    public void onSdkShutDown()
+                    {
+                        if (Constants.LOG_ACTIVE)
+                        {
+                            Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "Shutting down CIQ-SDK.");
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -112,23 +141,17 @@ public class Console extends Activity
                 @Override
                 public void onApplicationInfoReceived(IQApp app)
                 {
-                    if (serviceIntent == null)
+                    if (Constants.LOG_ACTIVE)
                     {
-                        if (Constants.LOG_ACTIVE)
-                        {
-                            Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "CIQ-app found on device. Starting background service...");
-                        }
-
-                        serviceIntent = new Intent(Console.this, ListenerService.class);
-                        serviceIntent.putExtra(ListenerService.EXTRA_IQDEVICE, iqDevice);
-
-                        startService(serviceIntent);
-
-                        serviceBroadcastReceiver = new ServiceBroadcastReceiver();
-
-                        final IntentFilter intentFilter = new IntentFilter(ListenerService.BROADCAST_ACTION);
-                        LocalBroadcastManager.getInstance(context).registerReceiver(serviceBroadcastReceiver, intentFilter);
+                        Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "CIQ-app found on device. Starting background service...");
                     }
+
+                    final Intent serviceIntent = new Intent(Console.this, ListenerService.class);
+                    serviceIntent.putExtra(ListenerService.EXTRA_IQDEVICE, iqDevice);
+
+                    startService(serviceIntent);
+
+                    serviceStarted = true;
                 }
 
                 @Override
@@ -173,54 +196,86 @@ public class Console extends Activity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        if (Constants.LOG_ACTIVE)
+        {
+            Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Saving instance.");
+        }
+
+        outState.putBoolean(STATE_SERVICE_STARTED, serviceStarted);
+        outState.putString(STATE_ACTION_LOG, actionLog.getText().toString());
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        if (Constants.LOG_ACTIVE)
+        {
+            Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Restoring instance.");
+        }
+
+        serviceStarted = savedInstanceState.getBoolean(STATE_SERVICE_STARTED);
+
+        actionLog.setText("");
+        actionLog.append(savedInstanceState.getString(STATE_ACTION_LOG));
+
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        if (Constants.LOG_ACTIVE)
+        {
+            Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "onDestroy; cleaning up...");
+        }
+
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(serviceBroadcastReceiver);
+
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
         {
             case R.id.close_app:
+                sanitize();
                 finish();
                 break;
             case R.id.clear_log:
                 ((TextView) findViewById(R.id.actionlog)).setText("");
-                stack.clear();
                 break;
         }
 
         return true;
     }
 
-    @Override
-    protected void onPause()
+    private void sanitize()
     {
-        super.onPause();
-
-        if (isFinishing())
+        try
         {
-            try
+            stopService(new Intent(Console.this, ListenerService.class));
+        }
+        catch (Exception e)
+        {
+            if (Constants.LOG_ACTIVE)
             {
-                if (serviceBroadcastReceiver != null)
-                {
-                    LocalBroadcastManager.getInstance(context).unregisterReceiver(serviceBroadcastReceiver);
-                }
+                Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while trying to stop/unregister the service/receiver.");
+            }
+        }
 
-                if (serviceIntent != null)
-                {
-                    stopService(serviceIntent);
-                }
-            }
-            catch (Exception e)
-            {
-                if (Constants.LOG_ACTIVE)
-                {
-                    Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while trying to stop/unregister the service/receiver.");
-                }
-            }
-
-            try
-            {
-                connectIQ.shutdown(this);
-            }
-            catch (Exception e)
+        try
+        {
+            connectIQ.shutdown(this);
+        }
+        catch (Exception e)
+        {
+            if (Constants.LOG_ACTIVE)
             {
                 Log.wtf(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while shutting down ConnectIQ-instance.");
             }
@@ -239,32 +294,7 @@ public class Console extends Activity
                 Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Received data from ListenerService: " + data);
             }
 
-            stack.push(data + " (" + DateFormat.getDateTimeInstance().format(new Date()) + ")");
-
-            actionLog.setText(TextUtils.join("\n", stack.toArray(new String[stack.size()])));
-        }
-    }
-
-    private class SizedStack<T> extends Stack<T>
-    {
-        private int maxSize;
-
-        public SizedStack(int size)
-        {
-            super();
-
-            this.maxSize = size;
-        }
-
-        @Override
-        public Object push(Object object)
-        {
-            if (this.size() == maxSize)
-            {
-                this.remove(0);
-            }
-
-            return super.push((T) object);
+            actionLog.append("\n" + data + " (" + DateFormat.getDateTimeInstance().format(new Date()) + ")");
         }
     }
 }

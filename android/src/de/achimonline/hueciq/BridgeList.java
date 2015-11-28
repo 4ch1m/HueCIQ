@@ -31,7 +31,7 @@ import java.util.List;
 
 public class BridgeList extends ListActivity
 {
-    private static final String LOG_PREFIX = BridgeList.class.getName() + " - ";
+    private static final String LOG_PREFIX = BridgeList.class.getSimpleName() + " - ";
 
     private PHHueSDK phHueSDK;
     private SharedPreferences sharedPreferences;

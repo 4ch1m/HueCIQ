@@ -1,7 +1,10 @@
 package de.achimonline.hueciq;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.garmin.android.connectiq.ConnectIQ;
@@ -18,9 +21,9 @@ import com.philips.lighting.model.PHLightState;
 import java.util.List;
 import java.util.Map;
 
-public class ListenerService extends IntentService implements ConnectIQ.ConnectIQListener, ConnectIQ.IQDeviceEventListener, ConnectIQ.IQApplicationEventListener
+public class ListenerService extends Service implements ConnectIQ.ConnectIQListener, ConnectIQ.IQDeviceEventListener, ConnectIQ.IQApplicationEventListener
 {
-    private static final String LOG_PREFIX = ListenerService.class.getName() + " - ";
+    private static final String LOG_PREFIX = ListenerService.class.getSimpleName() + " - ";
 
     public static final String EXTRA_IQDEVICE = "IQDevice";
 
@@ -29,26 +32,49 @@ public class ListenerService extends IntentService implements ConnectIQ.ConnectI
     public static final String BROADCAST_ACTION = ListenerService.class.getPackage().getName() + ".BROADCAST.ACTION";
     public static final String BROADCAST_DATA = ListenerService.class.getPackage().getName() + ".BROADCAST.DATA";
 
+    private PHHueSDK phHueSDK;
+
     private ConnectIQ connectIQ;
     private IQDevice iqDevice;
     private IQApp iqApp;
 
-    private final PHHueSDK phHueSDK = PHHueSDK.create();
-
-    public ListenerService()
-    {
-        super(SERVICE_NAME);
-    }
-
     @Override
-    protected void onHandleIntent(Intent intent)
+    public int onStartCommand(Intent intent, int flags, int startId)
     {
+        if (Constants.LOG_ACTIVE)
+        {
+            Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "Starting service ...");
+        }
+
+        phHueSDK = PHHueSDK.create();
         connectIQ = ConnectIQ.getInstance();
+
+        try
+        {
+            connectIQ.unregisterAllForEvents();
+        }
+        catch (Exception e)
+        {
+            if (Constants.LOG_ACTIVE)
+            {
+                Log.e(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while trying to unregister all events on CIQ-SDK.");
+            }
+        }
+
+        retrieveAndInitializeConnectIQSDK();
+        registerForEvents();
 
         iqDevice = (IQDevice) intent.getParcelableExtra(EXTRA_IQDEVICE);
         iqApp = new IQApp(getString(R.string.ciq_app_id));
 
-        registerForEvents();
+        return START_STICKY;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent)
+    {
+        return null;
     }
 
     private void registerForEvents()
@@ -97,10 +123,36 @@ public class ListenerService extends IntentService implements ConnectIQ.ConnectI
         }
     }
 
-    private void tryToReconnect()
+    private void retrieveAndInitializeConnectIQSDK()
     {
         connectIQ = ConnectIQ.getInstance(this, ConnectIQ.IQConnectType.WIRELESS);
         connectIQ.initialize(this, false, this);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        if (connectIQ != null)
+        {
+            if (Constants.LOG_ACTIVE)
+            {
+                Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "Unregistering all CIQ-SDK events.");
+            }
+
+            try
+            {
+                connectIQ.unregisterAllForEvents();
+            }
+            catch (Exception e)
+            {
+                if (Constants.LOG_ACTIVE)
+                {
+                    Log.e(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while trying to unregister from all CIQ-SDK events.");
+                }
+            }
+        }
+
+        super.onDestroy();
     }
 
     @Override
@@ -144,7 +196,7 @@ public class ListenerService extends IntentService implements ConnectIQ.ConnectI
 
         if (iqDeviceStatus == IQDevice.IQDeviceStatus.NOT_CONNECTED || iqDeviceStatus == IQDevice.IQDeviceStatus.UNKNOWN)
         {
-            tryToReconnect();
+            retrieveAndInitializeConnectIQSDK();
         }
     }
 
@@ -232,7 +284,6 @@ public class ListenerService extends IntentService implements ConnectIQ.ConnectI
 
             changeColor(hueColor);
         }
-
     }
 
     private void broadcastMessage(String message)

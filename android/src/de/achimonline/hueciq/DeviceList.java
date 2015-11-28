@@ -24,7 +24,7 @@ import java.util.List;
 
 public class DeviceList extends ListActivity
 {
-    private static final String LOG_PREFIX = DeviceList.class.getName() + " - ";
+    private static final String LOG_PREFIX = DeviceList.class.getSimpleName() + " - ";
 
     private IQDeviceAdapter iqDeviceAdapter;
     private ConnectIQ connectIQ;

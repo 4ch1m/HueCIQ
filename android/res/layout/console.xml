@@ -8,7 +8,7 @@
 
     <ScrollView android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.7">
+                android:layout_weight="0.8">
 
         <LinearLayout android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
@@ -29,26 +29,13 @@
                       android:textColor="@android:color/white"
                       tools:text="fenix 3"/>
 
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textAppearance="?android:attr/textAppearanceMedium"
-                      android:textColor="@android:color/darker_gray"
-                      android:text="@string/console_device_status"/>
-
-            <TextView android:id="@+id/devicestatus"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textAppearance="?android:attr/textAppearanceMedium"
-                      android:textColor="@android:color/white"
-                      tools:text="CONNECTED"/>
-
         </LinearLayout>
 
     </ScrollView>
 
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="fill_parent"
-                  android:layout_weight="0.3"
+                  android:layout_weight="0.2"
                   android:padding="10dp"
                   android:orientation="vertical">
 
@@ -59,12 +46,14 @@
                   android:gravity="top"
                   android:text="@string/console_actionlog"/>
 
-        <ScrollView android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+        <ScrollView android:id="@+id/actionlog_scrollview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
 
             <TextView android:id="@+id/actionlog"
                       android:layout_width="fill_parent"
-                      android:layout_height="fill_parent"
+                      android:layout_height="wrap_content"
                       android:textColor="@android:color/white"
                       android:minLines="3"
                       android:maxLines="500"
