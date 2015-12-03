@@ -67,6 +67,8 @@ public class ListenerService extends Service implements ConnectIQ.ConnectIQListe
         iqDevice = (IQDevice) intent.getParcelableExtra(EXTRA_IQDEVICE);
         iqApp = new IQApp(getString(R.string.ciq_app_id));
 
+        broadcastMessage(getString(R.string.action_log_background_service_started));
+
         return START_STICKY;
     }
 
@@ -132,6 +134,8 @@ public class ListenerService extends Service implements ConnectIQ.ConnectIQListe
     @Override
     public void onDestroy()
     {
+        broadcastMessage(getString(R.string.action_log_background_service_stopped));
+
         if (connectIQ != null)
         {
             if (Constants.LOG_ACTIVE)
@@ -192,7 +196,7 @@ public class ListenerService extends Service implements ConnectIQ.ConnectIQListe
             Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "CIQ-device status changed. (device=" + (iqDevice != null ? iqDevice.getFriendlyName() : "<unknown>") + ", status=" + iqDeviceStatus != null ? iqDeviceStatus.name() : "<unknown>" + ")");
         }
 
-        broadcastMessage(iqDeviceStatus != null ? "[ " + iqDeviceStatus.name() + " ]" : "[ Device status changed. ]");
+        broadcastMessage(iqDevice != null && iqDeviceStatus != null ? "< " + iqDevice.getFriendlyName() + " > - " + iqDeviceStatus.name() : getString(R.string.action_log_device_status_changed));
 
         if (iqDeviceStatus == IQDevice.IQDeviceStatus.NOT_CONNECTED || iqDeviceStatus == IQDevice.IQDeviceStatus.UNKNOWN)
         {
@@ -212,7 +216,7 @@ public class ListenerService extends Service implements ConnectIQ.ConnectIQListe
         {
             if (messageItem instanceof String)
             {
-                broadcastMessage((String) messageItem);
+                broadcastMessage(getString(R.string.action_log_received_command) + " [ " + (String) messageItem + " ]");
 
                 try
                 {

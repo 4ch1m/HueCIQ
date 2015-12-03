@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <color name="transparent">#00000000</color>
+
+  <color name="row_even">#D0D0D0</color>
+  <color name="row_odd">#E0E0E0</color>
+
+</resources>

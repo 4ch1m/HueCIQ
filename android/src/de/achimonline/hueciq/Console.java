@@ -1,20 +1,20 @@
 package de.achimonline.hueciq;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ScrollView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import com.garmin.android.connectiq.ConnectIQ;
 import com.garmin.android.connectiq.IQApp;
@@ -22,13 +22,16 @@ import com.garmin.android.connectiq.IQDevice;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Stack;
 
-public class Console extends Activity
+public class Console extends ListActivity
 {
     private static final String LOG_PREFIX = Console.class.getSimpleName() + " - ";
 
     private static final String STATE_ACTION_LOG = "actionLog";
     private static final String STATE_SERVICE_STARTED = "serviceStarted";
+    private static final String STATE_BROADCASTRECEIVER_REGISTERED = "broadcastReceiverStarted";
 
     public static final String EXTRA_IQDEVICE = "IQDevice";
 
@@ -37,12 +40,38 @@ public class Console extends Activity
     private ConnectIQ connectIQ;
     private IQDevice iqDevice;
 
+    private boolean broadcastReceiverIsRegistered = false;
+
     private TextView deviceNameView;
-    private TextView actionLog;
 
     private ServiceBroadcastReceiver serviceBroadcastReceiver;
 
     private boolean serviceStarted = false;
+
+    private class SizedStack<T> extends Stack<T>
+    {
+        private int maxSize;
+
+        public SizedStack(int size)
+        {
+            super();
+
+            this.maxSize = size;
+        }
+
+        @Override
+        public Object push(Object object)
+        {
+            while (this.size() >= maxSize)
+            {
+                this.remove(0);
+            }
+
+            return super.push((T) object);
+        }
+    }
+
+    private SizedStack<String> actionLog = new SizedStack<String>(500);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,26 +88,13 @@ public class Console extends Activity
 
         deviceNameView = (TextView) findViewById(R.id.devicename);
 
-        actionLog = (TextView) findViewById(R.id.actionlog);
-        actionLog.setMovementMethod(new ScrollingMovementMethod());
-        actionLog.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
+        final TextView headerView = new TextView(this);
+        headerView.setText(R.string.console_actionlog);
+        headerView.setBackgroundResource(android.R.color.black);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                ((ScrollView)findViewById(R.id.actionlog_scrollview)).fullScroll(ScrollView.FOCUS_DOWN);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s)
-            {
-            }
-        });
+        getListView().setBackgroundResource(android.R.color.black);
+        getListView().addHeaderView(headerView);
+        getListView().setSelectionAfterHeaderView();
     }
 
     @Override
@@ -86,9 +102,12 @@ public class Console extends Activity
     {
         super.onResume();
 
-        serviceBroadcastReceiver = new ServiceBroadcastReceiver();
+        setListAdapter(new ActionLogAdapter(this, R.layout.actionlogrow, R.id.actionlogitem, actionLog));
 
-        LocalBroadcastManager.getInstance(context).registerReceiver(serviceBroadcastReceiver, new IntentFilter(ListenerService.BROADCAST_ACTION));
+        if (!broadcastReceiverIsRegistered)
+        {
+            LocalBroadcastManager.getInstance(context).registerReceiver(new ServiceBroadcastReceiver(), new IntentFilter(ListenerService.BROADCAST_ACTION));
+        }
 
         if (iqDevice != null)
         {
@@ -145,6 +164,8 @@ public class Console extends Activity
                     {
                         Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "CIQ-app found on device. Starting background service...");
                     }
+
+                    addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
                     final Intent serviceIntent = new Intent(Console.this, ListenerService.class);
                     serviceIntent.putExtra(ListenerService.EXTRA_IQDEVICE, iqDevice);
@@ -203,8 +224,9 @@ public class Console extends Activity
             Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Saving instance.");
         }
 
+        outState.putBoolean(STATE_BROADCASTRECEIVER_REGISTERED, broadcastReceiverIsRegistered);
         outState.putBoolean(STATE_SERVICE_STARTED, serviceStarted);
-        outState.putString(STATE_ACTION_LOG, actionLog.getText().toString());
+        outState.putStringArray(STATE_ACTION_LOG, actionLog.toArray(new String[actionLog.size()]));
 
         super.onSaveInstanceState(outState);
     }
@@ -217,25 +239,22 @@ public class Console extends Activity
             Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Restoring instance.");
         }
 
+        broadcastReceiverIsRegistered = savedInstanceState.getBoolean(STATE_BROADCASTRECEIVER_REGISTERED);
         serviceStarted = savedInstanceState.getBoolean(STATE_SERVICE_STARTED);
 
-        actionLog.setText("");
-        actionLog.append(savedInstanceState.getString(STATE_ACTION_LOG));
+        actionLog.clear();
 
-        super.onRestoreInstanceState(savedInstanceState);
-    }
+        String[] savedActionLogItems = savedInstanceState.getStringArray(STATE_ACTION_LOG);
 
-    @Override
-    protected void onDestroy()
-    {
-        if (Constants.LOG_ACTIVE)
+        if (savedActionLogItems != null)
         {
-            Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "onDestroy; cleaning up...");
+            for (String savedActionLogItem : savedActionLogItems)
+            {
+                actionLog.push(savedActionLogItem);
+            }
         }
 
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(serviceBroadcastReceiver);
-
-        super.onDestroy();
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -248,7 +267,8 @@ public class Console extends Activity
                 finish();
                 break;
             case R.id.clear_log:
-                ((TextView) findViewById(R.id.actionlog)).setText("");
+                actionLog.clear();
+                ((ActionLogAdapter)getListAdapter()).notifyDataSetChanged();
                 break;
         }
 
@@ -294,7 +314,65 @@ public class Console extends Activity
                 Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Received data from ListenerService: " + data);
             }
 
-            actionLog.append("\n" + data + " (" + DateFormat.getDateTimeInstance().format(new Date()) + ")");
+            addToActionLog(data);
+        }
+    }
+
+    private void addToActionLog(String actionItem)
+    {
+        actionLog.push(actionItem + " (" + DateFormat.getDateTimeInstance().format(new Date()) + ")");
+
+        ((ActionLogAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    private class ActionLogAdapter extends ArrayAdapter<String>
+    {
+        private class ViewHolder
+        {
+            public TextView actionLogItem;
+        }
+
+        private List<String> listObjects;
+        private int layoutResourceId;
+        private int textViewResourceId;
+
+        private LayoutInflater inflater;
+
+        public ActionLogAdapter(Context context, int layoutResourceId, int textViewResourceId, List<String> listObjects)
+        {
+            super(context, layoutResourceId, textViewResourceId, listObjects);
+
+            this.listObjects = listObjects;
+            this.layoutResourceId = layoutResourceId;
+            this.textViewResourceId = textViewResourceId;
+
+            inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent)
+        {
+            ViewHolder viewHolder;
+
+            if (convertView == null)
+            {
+                convertView = inflater.inflate(layoutResourceId, null);
+
+                viewHolder = new ViewHolder();
+                viewHolder.actionLogItem = (TextView)convertView.findViewById(textViewResourceId);
+
+                convertView.setTag(viewHolder);
+            }
+            else
+            {
+                viewHolder = (ViewHolder)convertView.getTag();
+            }
+
+            convertView.setBackgroundResource(position % 2 == 0 ? R.drawable.list_selector_even : R.drawable.list_selector_odd);
+
+            viewHolder.actionLogItem.setText(listObjects.get(position));
+
+            return convertView;
         }
     }
 }
