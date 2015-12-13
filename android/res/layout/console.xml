@@ -33,37 +33,10 @@
 
     </ScrollView>
 
-    <LinearLayout android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:layout_weight="0.2"
-                  android:padding="10dp"
-                  android:orientation="vertical">
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceMedium"
-                  android:textColor="@android:color/darker_gray"
-                  android:gravity="top"
-                  android:text="@string/console_actionlog"/>
-
-        <ScrollView android:id="@+id/actionlog_scrollview"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:fillViewport="true">
-
-            <TextView android:id="@+id/actionlog"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:textColor="@android:color/white"
-                      android:minLines="3"
-                      android:maxLines="500"
-                      android:padding="5dp"
-                      android:scrollbars="vertical"
-                      android:gravity="bottom"
-                      tools:text="switch_on\nswitch_off\nbrightness_10\nbrightness_20\nbrightness_30\nbrightness_40\nbrightness_50\nbrightness_60\nbrightness_70\nbrightness_80\nbrightness_90\nbrightness_100\ncolor_red\ncolor_blue\ncolor_green\ncolor_yellow\ncolor_orange\ncolor_purple"/>
-
-        </ScrollView>
-
-    </LinearLayout>
+    <ListView android:id="@+id/android:list"
+              android:cacheColorHint="#00000000"
+              android:layout_weight="0.2"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"/>
 
 </LinearLayout>

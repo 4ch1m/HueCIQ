@@ -28,7 +28,7 @@ public class Main extends Activity
     private static final String LOG_PREFIX = Main.class.getSimpleName() + " - ";
 
     private PHHueSDK phHueSDK;
-    private SharedPreferences sharedPreferences;
+    private HueSharedPreferences hueSharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -36,7 +36,7 @@ public class Main extends Activity
         super.onCreate(savedInstanceState);
 
         phHueSDK = PHHueSDK.create();
-        sharedPreferences = SharedPreferences.getInstance(getApplicationContext());
+        hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
 
         setTitle(getString(R.string.app_name));
 
@@ -49,7 +49,7 @@ public class Main extends Activity
 
     public void start(View view)
     {
-        final Intent intent = new Intent(Main.this, BridgeList.class);
+        final Intent intent = new Intent(Main.this, HueBridgeList.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -89,15 +89,15 @@ public class Main extends Activity
         }
 
         final PHAccessPoint phAccessPoint = new PHAccessPoint();
-        phAccessPoint.setIpAddress(sharedPreferences.getLastConnectedIPAddress());
-        phAccessPoint.setUsername(sharedPreferences.getUsername());
+        phAccessPoint.setIpAddress(hueSharedPreferences.getLastConnectedIPAddress());
+        phAccessPoint.setUsername(hueSharedPreferences.getUsername());
 
         if (phHueSDK.isAccessPointConnected(phAccessPoint))
         {
             phHueSDK.setDisconnectedAccessPoint(Arrays.asList(phAccessPoint));
         }
 
-        sharedPreferences.setLastConnectedIPAddress("");
+        hueSharedPreferences.setLastConnectedIPAddress("");
 
         final Toast toast = Toast.makeText(this, getString(R.string.cached_bridge_info_cleared), Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);

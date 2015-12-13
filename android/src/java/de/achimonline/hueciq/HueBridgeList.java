@@ -26,15 +26,18 @@ import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
+import com.philips.lighting.model.PHLight;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class BridgeList extends ListActivity
+public class HueBridgeList extends ListActivity
 {
-    private static final String LOG_PREFIX = BridgeList.class.getSimpleName() + " - ";
+    private static final String LOG_PREFIX = HueBridgeList.class.getSimpleName() + " - ";
 
     private PHHueSDK phHueSDK;
-    private SharedPreferences sharedPreferences;
+    private HueSharedPreferences hueSharedPreferences;
     private AccessPointListAdapter accessPointListAdapter;
 
     private boolean lastSearchWasIPScan = false;
@@ -57,10 +60,10 @@ public class BridgeList extends ListActivity
 
         setListAdapter(accessPointListAdapter);
 
-        sharedPreferences = SharedPreferences.getInstance(getApplicationContext());
+        hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
 
-        final String lastIpAddress = sharedPreferences.getLastConnectedIPAddress();
-        final String lastUsername = sharedPreferences.getUsername();
+        final String lastIpAddress = hueSharedPreferences.getLastConnectedIPAddress();
+        final String lastUsername = hueSharedPreferences.getUsername();
 
         if (Constants.LOG_ACTIVE)
         {
@@ -162,8 +165,9 @@ public class BridgeList extends ListActivity
             phHueSDK.enableHeartbeat(phBridge, PHHueSDK.HB_INTERVAL);
             phHueSDK.getLastHeartbeat().put(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress(), System.currentTimeMillis());
 
-            sharedPreferences.setLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
-            sharedPreferences.setUsername(userName);
+            hueSharedPreferences.setLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
+            hueSharedPreferences.setUsername(userName);
+            hueSharedPreferences.setLightIds(getAllLightIds(phHueSDK.getSelectedBridge().getResourceCache().getAllLights()));
 
             PHWizardAlertDialog.getInstance().closeProgressDialog();
 
@@ -180,7 +184,7 @@ public class BridgeList extends ListActivity
 
             phHueSDK.startPushlinkAuthentication(accessPoint);
 
-            startActivity(new Intent(BridgeList.this, PushLinkAuthentication.class));
+            startActivity(new Intent(HueBridgeList.this, HuePushLinkAuthentication.class));
         }
 
         @Override
@@ -191,7 +195,7 @@ public class BridgeList extends ListActivity
                 Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "Bridge connection resumed.");
             }
 
-            if (BridgeList.this.isFinishing())
+            if (HueBridgeList.this.isFinishing())
             {
                 return;
             }
@@ -237,12 +241,12 @@ public class BridgeList extends ListActivity
             {
                 PHWizardAlertDialog.getInstance().closeProgressDialog();
 
-                BridgeList.this.runOnUiThread(new Runnable()
+                HueBridgeList.this.runOnUiThread(new Runnable()
                 {
                     @Override
                     public void run()
                     {
-                        PHWizardAlertDialog.showErrorDialog(BridgeList.this, message);
+                        PHWizardAlertDialog.showErrorDialog(HueBridgeList.this, message);
                     }
                 });
 
@@ -261,12 +265,12 @@ public class BridgeList extends ListActivity
                 else
                 {
                     PHWizardAlertDialog.getInstance().closeProgressDialog();
-                    BridgeList.this.runOnUiThread(new Runnable()
+                    HueBridgeList.this.runOnUiThread(new Runnable()
                     {
                         @Override
                         public void run()
                         {
-                            PHWizardAlertDialog.showErrorDialog(BridgeList.this, message);
+                            PHWizardAlertDialog.showErrorDialog(HueBridgeList.this, message);
                         }
                     });
                 }
@@ -336,14 +340,26 @@ public class BridgeList extends ListActivity
 
     private void doBridgeSearch()
     {
-        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.searching, BridgeList.this);
+        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.searching, HueBridgeList.this);
 
         ((PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE)).search(true, true);
     }
 
+    private Set<String> getAllLightIds(List<PHLight> phLights)
+    {
+        final HashSet<String> lightIds = new HashSet<String>();
+
+        for (PHLight phLight : phLights)
+        {
+            lightIds.add(phLight.getIdentifier());
+        }
+
+        return lightIds;
+    }
+
     private void startDeviceListActivity()
     {
-        final Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+        final Intent intent = new Intent(getApplicationContext(), IQDeviceList.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

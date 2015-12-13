@@ -43,4 +43,13 @@
     <string name="menu_clear_log">Log löschen</string>
     <string name="menu_exit_app">%1$s beenden</string>
 
+    <!-- *** -->
+
+    <string name="action_log_requesting_app_info">Fordere App-Info von %1$s an.</string>
+    <string name="action_log_app_found">%1$s auf %2$s gefunden. Starte den Hintergrunddienst.</string>
+    <string name="action_log_device_status_changed">Der Gerätestatus hat sich geändert.</string>
+    <string name="action_log_received_command">Kommando empfangen</string>
+    <string name="action_log_background_service_started">Hintergrunddienst gestartet.</string>
+    <string name="action_log_background_service_stopped">Hintergrunddienst gestoppt.</string>
+
 </resources>

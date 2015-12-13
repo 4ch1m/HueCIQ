@@ -14,7 +14,7 @@ import com.philips.lighting.model.PHHueParsingError;
 
 import java.util.List;
 
-public class PushLinkAuthentication extends Activity
+public class HuePushLinkAuthentication extends Activity
 {
     private static final int MAX_TIME = 30;
 
@@ -40,12 +40,12 @@ public class PushLinkAuthentication extends Activity
                 {
                     isDialogShowing = true;
 
-                    PushLinkAuthentication.this.runOnUiThread(new Runnable()
+                    HuePushLinkAuthentication.this.runOnUiThread(new Runnable()
                     {
                         @Override
                         public void run()
                         {
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(PushLinkAuthentication.this);
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(HuePushLinkAuthentication.this);
 
                             builder.setMessage(message).setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener()
                             {
