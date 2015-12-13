@@ -2,28 +2,33 @@ package de.achimonline.hueciq;
 
 import android.content.Context;
 
-public class SharedPreferences
+import java.util.Collections;
+import java.util.Set;
+
+public class HueSharedPreferences
 {
     private static final String HUE_SHARED_PREFERENCES_STORE = "HueSharedPrefs";
+
     private static final String LAST_CONNECTED_USERNAME = "LastConnectedUsername";
     private static final String LAST_CONNECTED_IP = "LastConnectedIP";
+    private static final String LIGHT_IDS = "LightIDs";
 
-    private static SharedPreferences instance = null;
+    private static HueSharedPreferences instance = null;
     private android.content.SharedPreferences mSharedPreferences = null;
 
     private android.content.SharedPreferences.Editor mSharedPreferencesEditor = null;
 
-    public static SharedPreferences getInstance(Context ctx)
+    public static HueSharedPreferences getInstance(Context ctx)
     {
         if (instance == null)
         {
-            instance = new SharedPreferences(ctx);
+            instance = new HueSharedPreferences(ctx);
         }
 
         return instance;
     }
 
-    private SharedPreferences(Context appContext)
+    private HueSharedPreferences(Context appContext)
     {
         mSharedPreferences = appContext.getSharedPreferences(HUE_SHARED_PREFERENCES_STORE, 0);
         mSharedPreferencesEditor = mSharedPreferences.edit();
@@ -49,6 +54,18 @@ public class SharedPreferences
     public boolean setLastConnectedIPAddress(String ipAddress)
     {
         mSharedPreferencesEditor.putString(LAST_CONNECTED_IP, ipAddress);
+
+        return mSharedPreferencesEditor.commit();
+    }
+
+    public Set<String> getLightIds()
+    {
+        return mSharedPreferences.getStringSet(LIGHT_IDS, Collections.<String>emptySet());
+    }
+
+    public boolean setLightIds(Set<String> lightIds)
+    {
+        mSharedPreferencesEditor.putStringSet(LIGHT_IDS, lightIds);
 
         return mSharedPreferencesEditor.commit();
     }

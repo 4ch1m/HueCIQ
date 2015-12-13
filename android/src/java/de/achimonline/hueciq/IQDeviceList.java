@@ -22,9 +22,9 @@ import com.garmin.android.connectiq.exception.ServiceUnavailableException;
 
 import java.util.List;
 
-public class DeviceList extends ListActivity
+public class IQDeviceList extends ListActivity
 {
-    private static final String LOG_PREFIX = DeviceList.class.getSimpleName() + " - ";
+    private static final String LOG_PREFIX = IQDeviceList.class.getSimpleName() + " - ";
 
     private IQDeviceAdapter iqDeviceAdapter;
     private ConnectIQ connectIQ;
@@ -43,6 +43,12 @@ public class DeviceList extends ListActivity
         setContentView(R.layout.devicelist);
 
         emptyView = (TextView) findViewById(android.R.id.empty);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
 
         iqDeviceAdapter = new IQDeviceAdapter(this);
         getListView().setAdapter(iqDeviceAdapter);
@@ -70,9 +76,9 @@ public class DeviceList extends ListActivity
                     Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "CIQ-SDK ready.");
                 }
 
-                loadDevices();
-
                 sdkReady = true;
+
+                loadDevices();
             }
 
             @Override
@@ -89,32 +95,20 @@ public class DeviceList extends ListActivity
     }
 
     @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        if (sdkReady)
-        {
-            loadDevices();
-        }
-    }
-
-    @Override
     protected void onPause()
     {
         super.onPause();
 
-        if (isFinishing()) {
-            try
+        try
+        {
+            connectIQ.unregisterAllForEvents();
+            connectIQ.shutdown(this);
+        }
+        catch (Exception e)
+        {
+            if (Constants.LOG_ACTIVE)
             {
-                connectIQ.shutdown(this);
-            }
-            catch (Exception e)
-            {
-                if (Constants.LOG_ACTIVE)
-                {
-                    Log.wtf(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while trying to shutdown the CIQ-SDK.");
-                }
+                Log.wtf(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while trying to shutdown the CIQ-SDK.");
             }
         }
     }
@@ -155,7 +149,8 @@ public class DeviceList extends ListActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra(Console.EXTRA_IQDEVICE, iqDevice);
+            intent.putExtra(Console.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
+            intent.putExtra(Console.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
 
             startActivity(intent);
         }
