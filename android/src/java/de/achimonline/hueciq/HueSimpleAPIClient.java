@@ -1,5 +1,6 @@
 package de.achimonline.hueciq;
 
+import com.philips.lighting.hue.sdk.utilities.PHUtilities;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -34,11 +35,13 @@ public class HueSimpleAPIClient
         }
     }
 
-    public void setHue(String lightId, int value)
+    public void setXYFromRGB(String lightId, int[] rgb)
     {
         try
         {
-            final StringEntity jsonBody = new StringEntity(String.format("{ \"hue\": %1$d }", value));
+            final float[] xy = xyColorFromRGB(rgb);
+
+            final StringEntity jsonBody = new StringEntity(String.format("{ \"xy\": [%1$f, %2$f] }", xy[0], xy[1]));
 
             defaultHttpClient.execute(createHttpPutForStateChange(lightId, jsonBody));
         }
@@ -68,5 +71,10 @@ public class HueSimpleAPIClient
         httpPut.setEntity(entity);
 
         return httpPut;
+    }
+
+    private float[] xyColorFromRGB(int[] rgb)
+    {
+        return PHUtilities.calculateXYFromRGB(rgb[0], rgb[1], rgb[2], "");
     }
 }

@@ -362,36 +362,36 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
 
     private void changeColor(String message)
     {
-        int hueColor;
+        int[] rgbColor;
 
         if (message.endsWith(getString(R.string.ciq_color_command_blue)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_blue));
+            rgbColor = getResources().getIntArray(R.array.blue);
         }
         else if (message.endsWith(getString(R.string.ciq_color_command_green)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_green));
+            rgbColor = getResources().getIntArray(R.array.green);
         }
         else if (message.endsWith(getString(R.string.ciq_color_command_yellow)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_yellow));
+            rgbColor = getResources().getIntArray(R.array.yellow);
         }
         else if (message.endsWith(getString(R.string.ciq_color_command_orange)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_orange));
+            rgbColor = getResources().getIntArray(R.array.orange);
         }
         else if (message.endsWith(getString(R.string.ciq_color_command_purple)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_purple));
+            rgbColor = getResources().getIntArray(R.array.purple);
         }
         else
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_red));
+            rgbColor = getResources().getIntArray(R.array.red);
         }
 
         for (String lightId : hueLightIds)
         {
-            hueSimpleAPIClient.setHue(lightId, hueColor);
+            hueSimpleAPIClient.setXYFromRGB(lightId, rgbColor);
         }
     }
 }
