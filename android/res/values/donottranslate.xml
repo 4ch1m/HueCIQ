@@ -17,4 +17,10 @@
     <string name="ciq_color_command_yellow">yellow</string>
     <string name="ciq_color_command_orange">orange</string>
     <string name="ciq_color_command_purple">purple</string>
+
+    <string name="ciq_command_light_id_separator">-</string>
+    <string name="ciq_command_light_id_all">0</string>
+
+    <string name="ciq_mail_item_separator">|</string>
+    <string name="ciq_mail_item_light_separator">;</string>
 </resources>

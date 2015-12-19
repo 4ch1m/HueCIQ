@@ -28,9 +28,8 @@ import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 import com.philips.lighting.model.PHLight;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class HueBridgeList extends ListActivity
 {
@@ -167,7 +166,7 @@ public class HueBridgeList extends ListActivity
 
             hueSharedPreferences.setLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
             hueSharedPreferences.setUsername(userName);
-            hueSharedPreferences.setLightIds(getAllLightIds(phHueSDK.getSelectedBridge().getResourceCache().getAllLights()));
+            hueSharedPreferences.setLightIdsAndNames(getAllLightIdsWithNames(phHueSDK.getSelectedBridge().getResourceCache().getAllLights()));
 
             PHWizardAlertDialog.getInstance().closeProgressDialog();
 
@@ -345,16 +344,16 @@ public class HueBridgeList extends ListActivity
         ((PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE)).search(true, true);
     }
 
-    private Set<String> getAllLightIds(List<PHLight> phLights)
+    private HashMap<String, String> getAllLightIdsWithNames(List<PHLight> phLights)
     {
-        final HashSet<String> lightIds = new HashSet<String>();
+        final HashMap<String, String> lightIdsAndNames = new HashMap<String, String>();
 
         for (PHLight phLight : phLights)
         {
-            lightIds.add(phLight.getIdentifier());
+            lightIdsAndNames.put(phLight.getIdentifier(), phLight.getName());
         }
 
-        return lightIds;
+        return lightIdsAndNames;
     }
 
     private void startDeviceListActivity()
