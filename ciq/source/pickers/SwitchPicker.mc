@@ -1,3 +1,4 @@
+using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
@@ -27,11 +28,13 @@ class SwitchPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
+        var selectedLightId = App.getApp().getProperty(HueCIQApp.PROPERTY_SELECTED_LIGHT);
+
         if(values[0] == Rez.Strings.switchPickerOn) {
-            Transmitter.switchOn();
+            Transmitter.switchOn(selectedLightId);
         }
         else if(values[0] == Rez.Strings.switchPickerOff) {
-            Transmitter.switchOff();
+            Transmitter.switchOff(selectedLightId);
         }
     }
 }

@@ -1,10 +1,14 @@
 using Toybox.Application as App;
+using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 using Toybox.Timer as Tmr;
 
-const TIMER_VALUE = 2000;
+const SPLASH_TIMER_VALUE = 2000;
 
 class HueCIQApp extends App.AppBase {
+    static const PROPERTY_KNOWN_LIGHTS = "known_lights";
+    static const PROPERTY_SELECTED_LIGHT = "selected_light";
+
     function initialize() {
         AppBase.initialize();
     }
@@ -21,6 +25,8 @@ class HueCIQApp extends App.AppBase {
 }
 
 class HueCIQView extends Ui.View {
+    var mailReceiver = null;
+
     function initialize() {
         View.initialize();
     }
@@ -30,11 +36,19 @@ class HueCIQView extends Ui.View {
     }
 
     function onShow() {
+        if (mailReceiver == null) {
+            mailReceiver = new MailReceiver();
+        }
+
         var author = findDrawableById("author");
         author.setText(Ui.loadResource(Rez.Strings.authorBy) + " " + Stringz.reverse(Ui.loadResource(Rez.Strings.Author)));
+        author.setLocation(author.locX, Sys.getDeviceSettings().screenHeight - 55);
+
+        var version = findDrawableById("version");
+        version.setLocation(version.locX, Sys.getDeviceSettings().screenHeight - 30);
 
         var timer = new Tmr.Timer();
-        timer.start(method(:showActionPicker), TIMER_VALUE, false);
+        timer.start(method(:showLightPicker), HueCIQApp.SPLASH_TIMER_VALUE, false);
     }
 
     function onUpdate(dc) {
@@ -44,8 +58,8 @@ class HueCIQView extends Ui.View {
     function onHide() {
     }
 
-    function showActionPicker() {
-        Ui.pushView(new ActionPicker(), new ActionPickerDelegate(), Ui.SLIDE_IMMEDIATE);
+    function showLightPicker() {
+        Ui.pushView(new LightPicker(), new LightPickerDelegate(), Ui.SLIDE_IMMEDIATE);
     }
 }
 
@@ -55,6 +69,6 @@ class HueCIQDelegate extends Ui.BehaviorDelegate {
     }
 
     function onSelect() {
-        Ui.pushView(new ActionPicker(), new ActionPickerDelegate(), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new LightPicker(), new LightPickerDelegate(), Ui.SLIDE_IMMEDIATE);
     }
 }

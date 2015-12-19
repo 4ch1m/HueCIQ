@@ -1,17 +1,6 @@
 <resources>
     <properties>
-        <property id="switch_command_prefix" type="string">switch_</property>
-        <property id="switch_command_on" type="string">on</property>
-        <property id="switch_command_off" type="string">off</property>
-        
-        <property id="brightness_command_prefix" type="string">brightness_</property>
-        
-        <property id="color_command_prefix" type="string">color_</property>
-        <property id="color_command_red" type="string">red</property>
-        <property id="color_command_blue" type="string">blue</property>
-        <property id="color_command_green" type="string">green</property>
-        <property id="color_command_yellow" type="string">yellow</property>
-        <property id="color_command_orange" type="string">orange</property>
-        <property id="color_command_purple" type="string">purple</property>
+        <property id="known_lights" type="string"></property>
+        <property id="selected_light" type="string"></property>
     </properties>
 </resources>

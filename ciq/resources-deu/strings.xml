@@ -1,9 +1,12 @@
 <strings>
 	<string id="authorBy">von</string>
 	
+    <string id="lightPickerTitle">Lampe</string>
+    <string id="lightPickerAll">[ Alle ]</string>
+
     <string id="actionPickerTitle">Aktion</string>
     <string id="actionPickerSwitch">An/Aus</string>
-    <string id="actionPickerBrightness">Hellig-\nkeit</string>
+    <string id="actionPickerBrightness">Helligkeit</string>
     <string id="actionPickerColor">Farbe</string>
 
     <string id="switchPickerTitle">An/Aus</string>

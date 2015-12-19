@@ -1,3 +1,4 @@
+using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
@@ -24,11 +25,15 @@ class ColorPicker extends Ui.Picker {
 }
 
 class ColorPickerDelegate extends Ui.PickerDelegate {
+    function initialize() {
+        PickerDelegate.initialize();
+    }
+
     function onCancel() {
         Ui.popView(Ui.SLIDE_IMMEDIATE);
     }
 
     function onAccept(values) {
-        Transmitter.setColor(values[0]);
+        Transmitter.setColor(App.getApp().getProperty(HueCIQApp.PROPERTY_SELECTED_LIGHT), values[0]);
     }
 }

@@ -1,6 +1,6 @@
 <layout id="MainLayout">
-    <label text="@Strings.AppName" x="center" y="15" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_BLUE" font="Gfx.FONT_LARGE" />
     <bitmap id="bulb" x="center" y="center" filename="images/bulb.png" />
+    <label text="@Strings.AppName" x="center" y="15" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_BLUE" font="Gfx.FONT_LARGE" />
     <label id="author" x="center" y="160" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" font="Gfx.FONT_TINY" />
-    <label text="@Strings.AppVersion" x="center" y="185" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_LT_GRAY" font="Gfx.FONT_XTINY" />
+    <label id="version" text="@Strings.AppVersion" x="center" y="185" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_LT_GRAY" font="Gfx.FONT_XTINY" />
 </layout>
