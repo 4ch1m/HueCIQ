@@ -1,9 +1,11 @@
 package de.achimonline.hueciq;
 
 import android.content.Context;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.Collections;
-import java.util.Set;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 
 public class HueSharedPreferences
 {
@@ -11,7 +13,9 @@ public class HueSharedPreferences
 
     private static final String LAST_CONNECTED_USERNAME = "LastConnectedUsername";
     private static final String LAST_CONNECTED_IP = "LastConnectedIP";
-    private static final String LIGHT_IDS = "LightIDs";
+    private static final String LIGHT_IDS_AND_NAMES = "LightIDsAndNames";
+
+    private static final Type GSON_MAP_TYPE = new TypeToken<HashMap<String, String>>(){}.getType();
 
     private static HueSharedPreferences instance = null;
     private android.content.SharedPreferences mSharedPreferences = null;
@@ -58,15 +62,31 @@ public class HueSharedPreferences
         return mSharedPreferencesEditor.commit();
     }
 
-    public Set<String> getLightIds()
+    public HashMap<String, String> getLightIdsAndNames()
     {
-        return mSharedPreferences.getStringSet(LIGHT_IDS, Collections.<String>emptySet());
+        String lightIdsAndNames = mSharedPreferences.getString(LIGHT_IDS_AND_NAMES, "");
+
+        if (lightIdsAndNames != null && !lightIdsAndNames.isEmpty())
+        {
+            return new Gson().fromJson(lightIdsAndNames, GSON_MAP_TYPE);
+        }
+        else
+        {
+            return new HashMap<String, String>();
+        }
     }
 
-    public boolean setLightIds(Set<String> lightIds)
+    public boolean setLightIdsAndNames(HashMap<String, String> lightIdsAndNames)
     {
-        mSharedPreferencesEditor.putStringSet(LIGHT_IDS, lightIds);
+        if (lightIdsAndNames != null && !lightIdsAndNames.isEmpty())
+        {
+            mSharedPreferencesEditor.putString(LIGHT_IDS_AND_NAMES, new Gson().toJson(lightIdsAndNames, GSON_MAP_TYPE));
 
-        return mSharedPreferencesEditor.commit();
+            return mSharedPreferencesEditor.commit();
+        }
+        else
+        {
+            return false;
+        }
     }
 }

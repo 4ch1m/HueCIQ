@@ -295,7 +295,7 @@ public class Console extends ListActivity
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, hueSharedPreferences.getLastConnectedIPAddress());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_USER_NAME, hueSharedPreferences.getUsername());
-                    serviceIntent.putExtra(Service.EXTRA_PHHUE_LIGHT_IDS, hueSharedPreferences.getLightIds().toArray(new String[hueSharedPreferences.getLightIds().size()]));
+                    serviceIntent.putExtra(Service.EXTRA_PHHUE_LIGHT_IDS_AND_NAMES, hueSharedPreferences.getLightIdsAndNames());
 
                     startService(serviceIntent);
 
