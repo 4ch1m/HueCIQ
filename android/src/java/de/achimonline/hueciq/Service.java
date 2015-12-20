@@ -8,6 +8,7 @@ import android.util.Log;
 import com.garmin.android.connectiq.ConnectIQ;
 import com.garmin.android.connectiq.IQApp;
 import com.garmin.android.connectiq.IQDevice;
+import com.philips.lighting.hue.sdk.utilities.PHUtilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -418,7 +419,7 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
     {
         final HueCIQCommand hueCIQCommand = new HueCIQCommand(message);
 
-        final int brightness = Integer.parseInt(hueCIQCommand.getCommand().substring(message.lastIndexOf("_") + 1));
+        final int brightness = Integer.parseInt(hueCIQCommand.getCommand().substring(message.lastIndexOf(getString(R.string.ciq_command_token_separator)) + 1));
 
         if (hueCIQCommand.isAllLights())
         {
@@ -464,16 +465,18 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
             rgbColor = getResources().getIntArray(R.array.red);
         }
 
+        final float[] xyColor = PHUtilities.calculateXYFromRGB(rgbColor[0], rgbColor[1], rgbColor[2], "");
+
         if (hueCIQCommand.isAllLights())
         {
             for (String lightId : hueLightIdsAndNames.keySet())
             {
-                hueSimpleAPIClient.setXYFromRGB(lightId, rgbColor);
+                hueSimpleAPIClient.setXY(lightId, xyColor);
             }
         }
         else
         {
-            hueSimpleAPIClient.setXYFromRGB(hueCIQCommand.getLightId(), rgbColor);
+            hueSimpleAPIClient.setXY(hueCIQCommand.getLightId(), xyColor);
         }
     }
 

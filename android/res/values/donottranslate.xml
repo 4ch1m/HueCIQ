@@ -18,6 +18,7 @@
     <string name="ciq_color_command_orange">orange</string>
     <string name="ciq_color_command_purple">purple</string>
 
+    <string name="ciq_command_token_separator">_</string>
     <string name="ciq_command_light_id_separator">-</string>
     <string name="ciq_command_light_id_all">0</string>
 
