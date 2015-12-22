@@ -1,7 +1,5 @@
 package de.achimonline.hueciq;
 
-import java.util.HashMap;
-
 public class Constants
 {
     public static final boolean RELEASE_BUILD = false;
