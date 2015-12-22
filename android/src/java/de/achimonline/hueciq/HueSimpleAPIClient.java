@@ -34,11 +34,11 @@ public class HueSimpleAPIClient
         }
     }
 
-    public void setHue(String lightId, int value)
+    public void setXY(String lightId, float[] xyColor)
     {
         try
         {
-            final StringEntity jsonBody = new StringEntity(String.format("{ \"hue\": %1$d }", value));
+            final StringEntity jsonBody = new StringEntity(String.format("{ \"xy\": [%1$f, %2$f] }", xyColor[0], xyColor[1]));
 
             defaultHttpClient.execute(createHttpPutForStateChange(lightId, jsonBody));
         }

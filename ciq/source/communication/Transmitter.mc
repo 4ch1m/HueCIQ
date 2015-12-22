@@ -1,36 +1,38 @@
 using Toybox.Application as App;
 using Toybox.Communications as Comm;
 using Toybox.Graphics as Gfx;
-//using Toybox.System as Sys;
-
-const SWITCH_COMMAND_PREFIX = "switch_";
-const SWITCH_COMMAND_ON = "on";
-const SWITCH_COMMAND_OFF = "off";
-
-const BRIGHTNESS_COMMAND_PREFIX = "brightness_";
-
-const COLOR_COMMAND_PREFIX = "color_";
-const COLOR_COMMAND_RED = "red";
-const COLOR_COMMAND_BLUE = "blue";
-const COLOR_COMMAND_GREEN = "green";
-const COLOR_COMMAND_YELLOW = "yellow";
-const COLOR_COMMAND_ORANGE = "orange";
-const COLOR_COMMAND_PURPLE = "purple";
+using Toybox.Attention as Att;
 
 class Transmitter {
-    static function switchOn() {
-        Comm.transmit(SWITCH_COMMAND_PREFIX + SWITCH_COMMAND_ON, null, new TransmitListener());
+    static const SWITCH_COMMAND_PREFIX = "switch_";
+    static const SWITCH_COMMAND_ON = "on";
+    static const SWITCH_COMMAND_OFF = "off";
+
+    static const BRIGHTNESS_COMMAND_PREFIX = "brightness_";
+
+    static const COLOR_COMMAND_PREFIX = "color_";
+    static const COLOR_COMMAND_RED = "red";
+    static const COLOR_COMMAND_BLUE = "blue";
+    static const COLOR_COMMAND_GREEN = "green";
+    static const COLOR_COMMAND_YELLOW = "yellow";
+    static const COLOR_COMMAND_ORANGE = "orange";
+    static const COLOR_COMMAND_PURPLE = "purple";
+
+    static const COMMAND_LIGHT_ID_SEPARATOR = "-";
+
+    static function switchOn(lightId) {
+        Comm.transmit(SWITCH_COMMAND_PREFIX + SWITCH_COMMAND_ON + COMMAND_LIGHT_ID_SEPARATOR + lightId, null, new TransmitListener());
     }
 
-    static function switchOff() {
-        Comm.transmit(SWITCH_COMMAND_PREFIX + SWITCH_COMMAND_OFF, null, new TransmitListener());
+    static function switchOff(lightId) {
+        Comm.transmit(SWITCH_COMMAND_PREFIX + SWITCH_COMMAND_OFF + COMMAND_LIGHT_ID_SEPARATOR + lightId, null, new TransmitListener());
     }
 
-    static function setBrightness(value) {
-        Comm.transmit(BRIGHTNESS_COMMAND_PREFIX + value, null, new TransmitListener());
+    static function setBrightness(lightId, value) {
+        Comm.transmit(BRIGHTNESS_COMMAND_PREFIX + value + COMMAND_LIGHT_ID_SEPARATOR + lightId, null, new TransmitListener());
     }
 
-    static function setColor(value) {
+    static function setColor(lightId, value) {
         var color = "";
 
         if (value == Gfx.COLOR_GREEN) {
@@ -52,7 +54,7 @@ class Transmitter {
             color = COLOR_COMMAND_RED;
         }
 
-        Comm.transmit(COLOR_COMMAND_PREFIX + color, null, new TransmitListener());
+        Comm.transmit(COLOR_COMMAND_PREFIX + color + COMMAND_LIGHT_ID_SEPARATOR + lightId, null, new TransmitListener());
     }
 }
 
@@ -62,10 +64,10 @@ class TransmitListener extends Comm.ConnectionListener {
     }
 
     function onComplete() {
-        //Sys.println("Transmit Complete");
+        Att.playTone(Att.TONE_START);
     }
 
     function onError() {
-        //Sys.println("Transmit Failed");
+        Att.playTone(Att.TONE_ALERT_LO);
     }
 }

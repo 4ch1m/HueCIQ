@@ -8,8 +8,10 @@ import android.util.Log;
 import com.garmin.android.connectiq.ConnectIQ;
 import com.garmin.android.connectiq.IQApp;
 import com.garmin.android.connectiq.IQDevice;
+import com.philips.lighting.hue.sdk.utilities.PHUtilities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Service extends android.app.Service implements ConnectIQ.ConnectIQListener, ConnectIQ.IQDeviceEventListener, ConnectIQ.IQApplicationEventListener
@@ -20,7 +22,7 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
     public static final String EXTRA_IQDEVICE_NAME = "IQDeviceName";
     public static final String EXTRA_PHHUE_IP_ADDRESS = "PHHueIPAddress";
     public static final String EXTRA_PHHUE_USER_NAME = "PHHueUserName";
-    public static final String EXTRA_PHHUE_LIGHT_IDS = "PHHueLightIDs";
+    public static final String EXTRA_PHHUE_LIGHT_IDS_AND_NAMES = "PHHueLightIDsAndNames";
 
     private ConnectIQ connectIQ;
     private HueSimpleAPIClient hueSimpleAPIClient;
@@ -33,7 +35,7 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
 
     private String hueIpAddress;
     private String hueUserName;
-    private String[] hueLightIds;
+    private HashMap<String, String> hueLightIdsAndNames;
 
     private String serviceAction = new String();
 
@@ -103,7 +105,7 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
 
         hueIpAddress = intent.getStringExtra(EXTRA_PHHUE_IP_ADDRESS);
         hueUserName = intent.getStringExtra(EXTRA_PHHUE_USER_NAME);
-        hueLightIds = intent.getStringArrayExtra(EXTRA_PHHUE_LIGHT_IDS);
+        hueLightIdsAndNames = (HashMap<String, String>) intent.getSerializableExtra(EXTRA_PHHUE_LIGHT_IDS_AND_NAMES);
 
         hueSimpleAPIClient = new HueSimpleAPIClient(hueIpAddress, hueUserName);
 
@@ -177,6 +179,41 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
         if (iqDeviceStatus == IQDevice.IQDeviceStatus.NOT_CONNECTED || iqDeviceStatus == IQDevice.IQDeviceStatus.UNKNOWN)
         {
             retrieveAndInitializeConnectIQSDK();
+        }
+        else
+        {
+            try
+            {
+                final String message = buildLightIdsAndNamesMessage();
+
+                connectIQ.sendMessage(iqDevice, iqApp, message, new ConnectIQ.IQSendMessageListener()
+                {
+                    @Override
+                    public void onMessageStatus(IQDevice iqDevice, IQApp iqApp, ConnectIQ.IQMessageStatus iqMessageStatus)
+                    {
+                        if (ConnectIQ.IQMessageStatus.SUCCESS == iqMessageStatus)
+                        {
+                            propagateAction(getString(R.string.action_log_light_infos_send_success));
+                        }
+                        else
+                        {
+                            if (Constants.LOG_ACTIVE)
+                            {
+                                Log.e(getString(R.string.app_log_tag), LOG_PREFIX + "Failure while trying to send message to CIQ-device. (device=" + (iqDevice != null ? iqDevice.getFriendlyName() : "<unknown>") + ", messageStatus=" + iqMessageStatus != null ? iqMessageStatus.name() : "<unknown>" + ")");
+                            }
+
+                            propagateAction(getString(R.string.action_log_light_infos_send_failure));
+                        }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                if (Constants.LOG_ACTIVE)
+                {
+                    Log.e(getString(R.string.app_log_tag), LOG_PREFIX + "Failed to send message with light-IDs and light-names! (device=" + (iqDevice != null ? iqDevice.getFriendlyName() : "<unknown>") + ", status=" + iqDeviceStatus != null ? iqDeviceStatus.name() : "<unknown>" + ")");
+                }
+            }
         }
     }
 
@@ -310,6 +347,25 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
         return new IQDevice(iqDeviceIdentifier, name);
     }
 
+    private String buildLightIdsAndNamesMessage()
+    {
+        final StringBuilder message = new StringBuilder("");
+
+        for (String lightId : hueLightIdsAndNames.keySet())
+        {
+            if (!message.toString().isEmpty())
+            {
+                message.append(getString(R.string.ciq_mail_item_separator));
+            }
+
+            message.append(lightId);
+            message.append(getString(R.string.ciq_mail_item_light_separator));
+            message.append(hueLightIdsAndNames.get(lightId));
+        }
+
+        return message.toString();
+    }
+
     private void processCIQMessage(final String message) throws Exception
     {
         if (Constants.LOG_ACTIVE)
@@ -342,56 +398,122 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
 
     private void switchStatus(String message)
     {
-        final boolean status = message.endsWith(getString(R.string.ciq_switch_command_on));
+        final HueCIQCommand hueCIQCommand = new HueCIQCommand(message);
 
-        for (String lightId : hueLightIds)
+        final boolean status = hueCIQCommand.getCommand().endsWith(getString(R.string.ciq_switch_command_on));
+
+        if (hueCIQCommand.isAllLights())
         {
-            hueSimpleAPIClient.setOn(lightId, status);
+            for (String lightId : hueLightIdsAndNames.keySet())
+            {
+                hueSimpleAPIClient.setOn(lightId, status);
+            }
+        }
+        else
+        {
+            hueSimpleAPIClient.setOn(hueCIQCommand.getLightId(), status);
         }
     }
 
     private void changeBrightness(String message)
     {
-        final int brightness = Integer.parseInt(message.substring(message.lastIndexOf("_") + 1));
+        final HueCIQCommand hueCIQCommand = new HueCIQCommand(message);
 
-        for (String lightId : hueLightIds)
+        final int brightness = Integer.parseInt(hueCIQCommand.getCommand().substring(message.lastIndexOf(getString(R.string.ciq_command_token_separator)) + 1));
+
+        if (hueCIQCommand.isAllLights())
         {
-            hueSimpleAPIClient.setBri(lightId, (int)(brightness * 2.5));
+            for (String lightId : hueLightIdsAndNames.keySet())
+            {
+                hueSimpleAPIClient.setBri(lightId, (int)(brightness * 2.5));
+            }
+        }
+        else
+        {
+            hueSimpleAPIClient.setBri(hueCIQCommand.getLightId(), (int)(brightness * 2.5));
         }
     }
 
     private void changeColor(String message)
     {
-        int hueColor;
+        final HueCIQCommand hueCIQCommand = new HueCIQCommand(message);
 
-        if (message.endsWith(getString(R.string.ciq_color_command_blue)))
+        int[] rgbColor;
+
+        if (hueCIQCommand.getCommand().endsWith(getString(R.string.ciq_color_command_blue)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_blue));
+            rgbColor = getResources().getIntArray(R.array.blue);
         }
-        else if (message.endsWith(getString(R.string.ciq_color_command_green)))
+        else if (hueCIQCommand.getCommand().endsWith(getString(R.string.ciq_color_command_green)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_green));
+            rgbColor = getResources().getIntArray(R.array.green);
         }
-        else if (message.endsWith(getString(R.string.ciq_color_command_yellow)))
+        else if (hueCIQCommand.getCommand().endsWith(getString(R.string.ciq_color_command_yellow)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_yellow));
+            rgbColor = getResources().getIntArray(R.array.yellow);
         }
-        else if (message.endsWith(getString(R.string.ciq_color_command_orange)))
+        else if (hueCIQCommand.getCommand().endsWith(getString(R.string.ciq_color_command_orange)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_orange));
+            rgbColor = getResources().getIntArray(R.array.orange);
         }
-        else if (message.endsWith(getString(R.string.ciq_color_command_purple)))
+        else if (hueCIQCommand.getCommand().endsWith(getString(R.string.ciq_color_command_purple)))
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_purple));
+            rgbColor = getResources().getIntArray(R.array.purple);
         }
         else
         {
-            hueColor = Constants.HUE_COLORS.get(getString(R.string.ciq_color_command_red));
+            rgbColor = getResources().getIntArray(R.array.red);
         }
 
-        for (String lightId : hueLightIds)
+        final float[] xyColor = PHUtilities.calculateXYFromRGB(rgbColor[0], rgbColor[1], rgbColor[2], "");
+
+        if (hueCIQCommand.isAllLights())
         {
-            hueSimpleAPIClient.setHue(lightId, hueColor);
+            for (String lightId : hueLightIdsAndNames.keySet())
+            {
+                hueSimpleAPIClient.setXY(lightId, xyColor);
+            }
+        }
+        else
+        {
+            hueSimpleAPIClient.setXY(hueCIQCommand.getLightId(), xyColor);
+        }
+    }
+
+    private class HueCIQCommand
+    {
+        private String command;
+        private String lightId;
+        private boolean allLights;
+
+        public HueCIQCommand(String message)
+        {
+            if (message != null && !message.isEmpty())
+            {
+                final String[] splittedMessage = message.split(getString(R.string.ciq_command_light_id_separator));
+
+                if (splittedMessage.length == 2)
+                {
+                    this.command = splittedMessage[0];
+                    this.lightId = splittedMessage[1];
+                    this.allLights = getString(R.string.ciq_command_light_id_all).equals(splittedMessage[1]);
+                }
+            }
+        }
+
+        public String getCommand()
+        {
+            return command;
+        }
+
+        public String getLightId()
+        {
+            return lightId;
+        }
+
+        public boolean isAllLights()
+        {
+            return allLights;
         }
     }
 }

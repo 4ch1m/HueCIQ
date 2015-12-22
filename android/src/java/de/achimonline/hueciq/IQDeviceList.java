@@ -29,8 +29,6 @@ public class IQDeviceList extends ListActivity
     private IQDeviceAdapter iqDeviceAdapter;
     private ConnectIQ connectIQ;
 
-    private boolean sdkReady = false;
-
     private TextView emptyView;
 
     @Override
@@ -65,7 +63,6 @@ public class IQDeviceList extends ListActivity
                 }
 
                 emptyView.setText(R.string.initialization_error + errStatus.name());
-                sdkReady = false;
             }
 
             @Override
@@ -75,8 +72,6 @@ public class IQDeviceList extends ListActivity
                 {
                     Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "CIQ-SDK ready.");
                 }
-
-                sdkReady = true;
 
                 loadDevices();
             }
@@ -88,8 +83,6 @@ public class IQDeviceList extends ListActivity
                 {
                     Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "Shutting down CIQ-SDK.");
                 }
-
-                sdkReady = false;
             }
         });
     }
