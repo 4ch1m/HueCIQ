@@ -14,7 +14,7 @@ class LightPicker extends Ui.Picker {
 
         var pickerItems;
 
-        if (knownLights == null || "" == knownLights) {
+        if (knownLights == null || "" == knownLights || knownLights.find(LIGHT_ID_SEPARATOR) == null) {
             pickerItems = allLightsItemArray;
         } else {
             var knownLightItems = Stringz.split(knownLights, LIGHT_ITEM_SEPARATOR);
