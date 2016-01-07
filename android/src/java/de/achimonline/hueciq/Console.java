@@ -288,6 +288,10 @@ public class Console extends ListActivity
 
                     addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
+                    final IQSharedPreferences iqSharedPreferences = IQSharedPreferences.getInstance(getApplicationContext());
+                    iqSharedPreferences.setDeviceIdentifier(iqDevice.getDeviceIdentifier());
+                    iqSharedPreferences.setDeviceName(iqDevice.getFriendlyName());
+
                     final HueSharedPreferences hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
 
                     final Intent serviceIntent = new Intent(Service.class.getName());
