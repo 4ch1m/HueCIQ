@@ -24,6 +24,8 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
     public static final String EXTRA_PHHUE_USER_NAME = "PHHueUserName";
     public static final String EXTRA_PHHUE_LIGHT_IDS_AND_NAMES = "PHHueLightIDsAndNames";
 
+    private IQSharedPreferences iqSharedPreferences = IQSharedPreferences.getInstance(getApplicationContext());
+
     private ConnectIQ connectIQ;
     private HueSimpleAPIClient hueSimpleAPIClient;
 
@@ -100,12 +102,31 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
             Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "Starting service ...");
         }
 
-        iqDeviceIdentifier = intent.getLongExtra(EXTRA_IQDEVICE_IDENTIFIER, 0l);
-        iqDeviceName = intent.getStringExtra(EXTRA_IQDEVICE_NAME);
+        if (intent.getExtras() == null || intent.getExtras().size() == 0)
+        {
+            if (Constants.LOG_ACTIVE)
+            {
+                Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "No extras in service-intent.");
+            }
 
-        hueIpAddress = intent.getStringExtra(EXTRA_PHHUE_IP_ADDRESS);
-        hueUserName = intent.getStringExtra(EXTRA_PHHUE_USER_NAME);
-        hueLightIdsAndNames = (HashMap<String, String>) intent.getSerializableExtra(EXTRA_PHHUE_LIGHT_IDS_AND_NAMES);
+            iqDeviceIdentifier = iqSharedPreferences.getDeviceIdentifier();
+            iqDeviceName = iqSharedPreferences.getDeviceName();
+
+            final HueSharedPreferences hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
+
+            hueIpAddress = hueSharedPreferences.getLastConnectedIPAddress();
+            hueUserName = hueSharedPreferences.getUsername();
+            hueLightIdsAndNames = hueSharedPreferences.getLightIdsAndNames();
+        }
+        else
+        {
+            iqDeviceIdentifier = intent.getLongExtra(EXTRA_IQDEVICE_IDENTIFIER, 0l);
+            iqDeviceName = intent.getStringExtra(EXTRA_IQDEVICE_NAME);
+
+            hueIpAddress = intent.getStringExtra(EXTRA_PHHUE_IP_ADDRESS);
+            hueUserName = intent.getStringExtra(EXTRA_PHHUE_USER_NAME);
+            hueLightIdsAndNames = (HashMap<String, String>) intent.getSerializableExtra(EXTRA_PHHUE_LIGHT_IDS_AND_NAMES);
+        }
 
         hueSimpleAPIClient = new HueSimpleAPIClient(hueIpAddress, hueUserName);
 
