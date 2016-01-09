@@ -24,7 +24,7 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
     public static final String EXTRA_PHHUE_USER_NAME = "PHHueUserName";
     public static final String EXTRA_PHHUE_LIGHT_IDS_AND_NAMES = "PHHueLightIDsAndNames";
 
-    private IQSharedPreferences iqSharedPreferences = IQSharedPreferences.getInstance(getApplicationContext());
+    private IQSharedPreferences iqSharedPreferences;
 
     private ConnectIQ connectIQ;
     private HueSimpleAPIClient hueSimpleAPIClient;
@@ -96,6 +96,8 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         super.onStartCommand(intent, flags, startId);
+
+        iqSharedPreferences = IQSharedPreferences.getInstance(getApplicationContext());
 
         if (Constants.LOG_ACTIVE)
         {

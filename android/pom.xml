@@ -7,7 +7,7 @@
 
     <groupId>de.achimonline.hueciq</groupId>
     <artifactId>HueCIQ</artifactId>
-    <version>2.2</version>
+    <version>2.3</version>
     <packaging>apk</packaging>
 
     <properties>
