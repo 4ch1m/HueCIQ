@@ -22,7 +22,9 @@ import com.garmin.android.connectiq.IQApp;
 import com.garmin.android.connectiq.IQDevice;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;
 
@@ -40,7 +42,7 @@ public class Console extends ListActivity
     private long iqDeviceIdentifier;
     private String iqDeviceName;
 
-    private SizedStackWithReversedGetter<String> actionLog = new SizedStackWithReversedGetter<String>(Constants.ACTION_LOG_SIZE);
+    private SizedStackWithReversedGetter<String> actionLog;
 
     private ActionLogAdapter actionLogAdapter;
 
@@ -113,11 +115,15 @@ public class Console extends ListActivity
         {
             sharedPreferences.setIQDeviceName(iqDeviceName);
             sharedPreferences.setIQDeviceIdentifier(iqDeviceIdentifier);
+
+            actionLog = new SizedStackWithReversedGetter<String>(Constants.ACTION_LOG_SIZE);
         }
         else
         {
             iqDeviceIdentifier = sharedPreferences.getIQDeviceIdentifier();
             iqDeviceName = sharedPreferences.getIQDeviceName();
+
+            actionLog = new SizedStackWithReversedGetter<String>(Constants.ACTION_LOG_SIZE, sharedPreferences.getActionLogHistory());
         }
 
         setTitle(getString(R.string.console_title));
@@ -184,6 +190,8 @@ public class Console extends ListActivity
     protected void onPause()
     {
         super.onPause();
+
+        sharedPreferences.setActionLogHistory(actionLog.toStringArray());
 
         unregisterFromAllConnectIQEventsAndShutdownSDK();
     }
@@ -485,6 +493,16 @@ public class Console extends ListActivity
             this.maxSize = size;
         }
 
+        public SizedStackWithReversedGetter(int size, String[] elements)
+        {
+            this(size);
+
+            for (String element : elements)
+            {
+                this.push(element);
+            }
+        }
+
         @Override
         public Object push(Object object)
         {
@@ -500,6 +518,19 @@ public class Console extends ListActivity
         public T get(int location)
         {
             return location >= 0 && location < size() ? super.get((size() - location) - 1) : super.get(location);
+        }
+
+        public String[] toStringArray()
+        {
+            Enumeration<T> elements = this.elements();
+            ArrayList<String> arrayList = new ArrayList<String>(this.size());
+
+            while (elements.hasMoreElements())
+            {
+                arrayList.add((String) elements.nextElement());
+            }
+
+            return arrayList.toArray(new String[arrayList.size()]);
         }
     }
 }

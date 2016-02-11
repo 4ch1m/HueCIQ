@@ -18,7 +18,7 @@ public class SharedPreferences
     private static final String IQ_DEVICE_IDENTIFIER = "IQDeviceIdentifier";
     private static final String IQ_DEVICE_NAME = "IQDeviceName";
 
-    private static final String USER_REQUESTED_SHUTDOWN = "UserRequestedShutdown";
+    private static final String ACTION_LOG_HISTORY = "LogHistory";
 
     private static final Type GSON_MAP_TYPE = new TypeToken<HashMap<String, String>>(){}.getType();
 
@@ -115,6 +115,18 @@ public class SharedPreferences
     public boolean setIQDeviceName(String deviceName)
     {
         sharedPreferencesEditor.putString(IQ_DEVICE_NAME, deviceName);
+
+        return sharedPreferencesEditor.commit();
+    }
+
+    public String[] getActionLogHistory()
+    {
+        return new Gson().fromJson(sharedPreferences.getString(ACTION_LOG_HISTORY, ""), String[].class);
+    }
+
+    public boolean setActionLogHistory(String[] logHistory)
+    {
+        sharedPreferencesEditor.putString(ACTION_LOG_HISTORY, new Gson().toJson(logHistory));
 
         return sharedPreferencesEditor.commit();
     }
