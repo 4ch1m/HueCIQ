@@ -36,7 +36,7 @@ public class HueBridgeList extends ListActivity
     private static final String LOG_PREFIX = HueBridgeList.class.getSimpleName() + " - ";
 
     private PHHueSDK phHueSDK;
-    private HueSharedPreferences hueSharedPreferences;
+    private SharedPreferences sharedPreferences;
     private AccessPointListAdapter accessPointListAdapter;
 
     private boolean lastSearchWasIPScan = false;
@@ -59,10 +59,10 @@ public class HueBridgeList extends ListActivity
 
         setListAdapter(accessPointListAdapter);
 
-        hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
+        sharedPreferences = SharedPreferences.getInstance(getApplicationContext());
 
-        final String lastIpAddress = hueSharedPreferences.getLastConnectedIPAddress();
-        final String lastUsername = hueSharedPreferences.getUsername();
+        final String lastIpAddress = sharedPreferences.getHueLastConnectedIPAddress();
+        final String lastUsername = sharedPreferences.getHueLastConnectedUsername();
 
         if (Constants.LOG_ACTIVE)
         {
@@ -164,9 +164,9 @@ public class HueBridgeList extends ListActivity
             phHueSDK.enableHeartbeat(phBridge, PHHueSDK.HB_INTERVAL);
             phHueSDK.getLastHeartbeat().put(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress(), System.currentTimeMillis());
 
-            hueSharedPreferences.setLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
-            hueSharedPreferences.setUsername(userName);
-            hueSharedPreferences.setLightIdsAndNames(getAllLightIdsWithNames(phHueSDK.getSelectedBridge().getResourceCache().getAllLights()));
+            sharedPreferences.setHueLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
+            sharedPreferences.setHueLastConnectedUsername(userName);
+            sharedPreferences.setHueLightIdsAndNames(getAllLightIdsWithNames(phHueSDK.getSelectedBridge().getResourceCache().getAllLights()));
 
             PHWizardAlertDialog.getInstance().closeProgressDialog();
 
@@ -358,12 +358,7 @@ public class HueBridgeList extends ListActivity
 
     private void startDeviceListActivity()
     {
-        final Intent intent = new Intent(getApplicationContext(), IQDeviceList.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        startActivity(intent);
+        startActivity(Helpers.getIntent(getApplicationContext(), IQDeviceList.class));
     }
 
     private static final class PHWizardAlertDialog

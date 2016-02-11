@@ -1,6 +1,5 @@
 package de.achimonline.hueciq;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -46,6 +45,8 @@ public class Console extends ListActivity
     private ActionLogAdapter actionLogAdapter;
 
     private ServiceAPI serviceAPI;
+
+    private SharedPreferences sharedPreferences;
 
     private ServiceListener.Stub serviceListener = new ServiceListener.Stub()
     {
@@ -103,12 +104,25 @@ public class Console extends ListActivity
     {
         super.onCreate(savedInstanceState);
 
-        setTitle(getString(R.string.console_title));
-
-        setContentView(R.layout.console);
+        sharedPreferences = SharedPreferences.getInstance(getApplicationContext());
 
         iqDeviceIdentifier = getIntent().getLongExtra(EXTRA_IQDEVICE_IDENTIFIER, 0l);
         iqDeviceName = getIntent().getStringExtra(EXTRA_IQDEVICE_NAME);
+
+        if (iqDeviceIdentifier != 0l && iqDeviceName != null)
+        {
+            sharedPreferences.setIQDeviceName(iqDeviceName);
+            sharedPreferences.setIQDeviceIdentifier(iqDeviceIdentifier);
+        }
+        else
+        {
+            iqDeviceIdentifier = sharedPreferences.getIQDeviceIdentifier();
+            iqDeviceName = sharedPreferences.getIQDeviceName();
+        }
+
+        setTitle(getString(R.string.console_title));
+
+        setContentView(R.layout.console);
 
         ((TextView) findViewById(R.id.devicename)).setText(iqDeviceName);
 
@@ -130,7 +144,7 @@ public class Console extends ListActivity
 
         setListAdapter(actionLogAdapter);
 
-        if (!isServiceRunning())
+        if (!Service.isRunning(this))
         {
             connectIQ = ConnectIQ.getInstance(this, ConnectIQ.IQConnectType.WIRELESS);
             connectIQ.initialize(this, true, new ConnectIQ.ConnectIQListener()
@@ -160,6 +174,10 @@ public class Console extends ListActivity
                 }
             });
         }
+        else
+        {
+            bindServiceConnection();
+        }
     }
 
     @Override
@@ -168,21 +186,6 @@ public class Console extends ListActivity
         super.onPause();
 
         unregisterFromAllConnectIQEventsAndShutdownSDK();
-    }
-
-    private boolean isServiceRunning()
-    {
-        final ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-        {
-            if (Service.class.getName().equals(service.service.getClassName()))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void shutdownServiceComponents()
@@ -288,18 +291,12 @@ public class Console extends ListActivity
 
                     addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
-                    final IQSharedPreferences iqSharedPreferences = IQSharedPreferences.getInstance(getApplicationContext());
-                    iqSharedPreferences.setDeviceIdentifier(iqDevice.getDeviceIdentifier());
-                    iqSharedPreferences.setDeviceName(iqDevice.getFriendlyName());
-
-                    final HueSharedPreferences hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
-
                     final Intent serviceIntent = new Intent(Service.class.getName());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
-                    serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, hueSharedPreferences.getLastConnectedIPAddress());
-                    serviceIntent.putExtra(Service.EXTRA_PHHUE_USER_NAME, hueSharedPreferences.getUsername());
-                    serviceIntent.putExtra(Service.EXTRA_PHHUE_LIGHT_IDS_AND_NAMES, hueSharedPreferences.getLightIdsAndNames());
+                    serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, sharedPreferences.getHueLastConnectedIPAddress());
+                    serviceIntent.putExtra(Service.EXTRA_PHHUE_USER_NAME, sharedPreferences.getHueLastConnectedUsername());
+                    serviceIntent.putExtra(Service.EXTRA_PHHUE_LIGHT_IDS_AND_NAMES, sharedPreferences.getHueLightIdsAndNames());
 
                     startService(serviceIntent);
 

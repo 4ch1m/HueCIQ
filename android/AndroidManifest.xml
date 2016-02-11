@@ -2,8 +2,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.achimonline.hueciq"
-          android:versionCode="7"
-          android:versionName="2.3">
+          android:versionCode="8"
+          android:versionName="2.4">
 
     <uses-sdk android:minSdkVersion="11"/>
 
@@ -27,9 +27,9 @@
 
         <activity android:name="de.achimonline.hueciq.HuePushLinkAuthentication"/>
 
-        <activity android:name="de.achimonline.hueciq.Console"/>
-
         <activity android:name="de.achimonline.hueciq.IQDeviceList"/>
+
+        <activity android:name="de.achimonline.hueciq.Console"/>
 
         <!--<service android:name="de.achimonline.hueciq.Service">-->
         <service android:name="de.achimonline.hueciq.Service"

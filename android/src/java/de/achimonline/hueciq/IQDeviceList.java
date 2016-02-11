@@ -138,10 +138,7 @@ public class IQDeviceList extends ListActivity
         }
         else
         {
-            final Intent intent = new Intent(this, Console.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            final Intent intent = Helpers.getIntent(this, Console.class);
             intent.putExtra(Console.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
             intent.putExtra(Console.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
 

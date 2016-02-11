@@ -1,9 +1,15 @@
 package de.achimonline.hueciq;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.garmin.android.connectiq.ConnectIQ;
 import com.garmin.android.connectiq.IQApp;
@@ -18,13 +24,15 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
 {
     private static final String LOG_PREFIX = Service.class.getSimpleName() + " - ";
 
+    public static final int SERVICE_NOTIFICATION_ID = 1;
+
     public static final String EXTRA_IQDEVICE_IDENTIFIER = "IQDeviceIdentifier";
     public static final String EXTRA_IQDEVICE_NAME = "IQDeviceName";
     public static final String EXTRA_PHHUE_IP_ADDRESS = "PHHueIPAddress";
     public static final String EXTRA_PHHUE_USER_NAME = "PHHueUserName";
     public static final String EXTRA_PHHUE_LIGHT_IDS_AND_NAMES = "PHHueLightIDsAndNames";
 
-    private IQSharedPreferences iqSharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     private ConnectIQ connectIQ;
     private HueSimpleAPIClient hueSimpleAPIClient;
@@ -73,6 +81,21 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
         }
     };
 
+    public static boolean isRunning(Activity activity)
+    {
+        final ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo runningServiceInfo : activityManager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if (Service.class.getName().equals(runningServiceInfo.service.getClassName()))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent)
@@ -97,7 +120,7 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
     {
         super.onStartCommand(intent, flags, startId);
 
-        iqSharedPreferences = IQSharedPreferences.getInstance(getApplicationContext());
+        sharedPreferences = SharedPreferences.getInstance(getApplicationContext());
 
         if (Constants.LOG_ACTIVE)
         {
@@ -111,14 +134,12 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
                 Log.d(getString(R.string.app_log_tag), LOG_PREFIX + "No extras in service-intent.");
             }
 
-            iqDeviceIdentifier = iqSharedPreferences.getDeviceIdentifier();
-            iqDeviceName = iqSharedPreferences.getDeviceName();
+            iqDeviceIdentifier = sharedPreferences.getIQDeviceIdentifier();
+            iqDeviceName = sharedPreferences.getIQDeviceName();
 
-            final HueSharedPreferences hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
-
-            hueIpAddress = hueSharedPreferences.getLastConnectedIPAddress();
-            hueUserName = hueSharedPreferences.getUsername();
-            hueLightIdsAndNames = hueSharedPreferences.getLightIdsAndNames();
+            hueIpAddress = sharedPreferences.getHueLastConnectedIPAddress();
+            hueUserName = sharedPreferences.getHueLastConnectedUsername();
+            hueLightIdsAndNames = sharedPreferences.getHueLightIdsAndNames();
         }
         else
         {
@@ -136,12 +157,16 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
 
         propagateAction(getString(R.string.action_log_background_service_started));
 
+        startForeground(SERVICE_NOTIFICATION_ID, createNotification());
+
         return START_STICKY;
     }
 
     @Override
     public void onDestroy()
     {
+        stopForeground(true);
+
         propagateAction(getString(R.string.action_log_background_service_stopped));
 
         try
@@ -368,6 +393,19 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
         }
 
         return new IQDevice(iqDeviceIdentifier, name);
+    }
+
+    private Notification createNotification()
+    {
+        final PendingIntent pendingIntent = (PendingIntent.getActivity(this, 0 , new Intent(this, Console.class), PendingIntent.FLAG_UPDATE_CURRENT));
+
+        return new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_bulb)
+                    .setContentTitle(getString(R.string.notification_title))
+                    .setContentText(getString(R.string.notification_text))
+                    .setContentIntent(pendingIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                    .build();
     }
 
     private String buildLightIdsAndNamesMessage()
