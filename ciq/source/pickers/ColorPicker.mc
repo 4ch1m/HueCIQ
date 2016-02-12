@@ -1,6 +1,7 @@
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
+using Toybox.Attention as Att;
 
 class ColorPicker extends Ui.Picker {
     var factory;
@@ -34,6 +35,8 @@ class ColorPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
+        Att.playTone(Att.TONE_KEY);
+
         Transmitter.setColor(App.getApp().getProperty(HueCIQApp.PROPERTY_SELECTED_LIGHT), values[0]);
     }
 }

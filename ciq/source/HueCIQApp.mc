@@ -26,6 +26,7 @@ class HueCIQApp extends App.AppBase {
 
 class HueCIQView extends Ui.View {
     var mailReceiver = null;
+    var timer = null;
 
     function initialize() {
         View.initialize();
@@ -47,7 +48,7 @@ class HueCIQView extends Ui.View {
         var version = findDrawableById("version");
         version.setLocation(version.locX, Sys.getDeviceSettings().screenHeight - 30);
 
-        var timer = new Tmr.Timer();
+        timer = new Tmr.Timer();
         timer.start(method(:showLightPicker), HueCIQApp.SPLASH_TIMER_VALUE, false);
     }
 
@@ -56,6 +57,7 @@ class HueCIQView extends Ui.View {
     }
 
     function onHide() {
+       timer.stop();
     }
 
     function showLightPicker() {
