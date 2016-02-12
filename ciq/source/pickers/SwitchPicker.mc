@@ -1,6 +1,7 @@
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
+using Toybox.Attention as Att;
 
 class SwitchPicker extends Ui.Picker {
     function initialize() {
@@ -28,6 +29,8 @@ class SwitchPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
+        Att.playTone(Att.TONE_KEY);
+
         var selectedLightId = App.getApp().getProperty(HueCIQApp.PROPERTY_SELECTED_LIGHT);
 
         if(values[0] == Rez.Strings.switchPickerOn) {
