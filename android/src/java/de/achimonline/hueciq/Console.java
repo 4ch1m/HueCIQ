@@ -1,6 +1,5 @@
 package de.achimonline.hueciq;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -23,7 +22,9 @@ import com.garmin.android.connectiq.IQApp;
 import com.garmin.android.connectiq.IQDevice;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;
 
@@ -41,11 +42,13 @@ public class Console extends ListActivity
     private long iqDeviceIdentifier;
     private String iqDeviceName;
 
-    private SizedStackWithReversedGetter<String> actionLog = new SizedStackWithReversedGetter<String>(Constants.ACTION_LOG_SIZE);
+    private SizedStackWithReversedGetter<String> actionLog;
 
     private ActionLogAdapter actionLogAdapter;
 
     private ServiceAPI serviceAPI;
+
+    private SharedPreferences sharedPreferences;
 
     private ServiceListener.Stub serviceListener = new ServiceListener.Stub()
     {
@@ -103,12 +106,29 @@ public class Console extends ListActivity
     {
         super.onCreate(savedInstanceState);
 
-        setTitle(getString(R.string.console_title));
-
-        setContentView(R.layout.console);
+        sharedPreferences = SharedPreferences.getInstance(getApplicationContext());
 
         iqDeviceIdentifier = getIntent().getLongExtra(EXTRA_IQDEVICE_IDENTIFIER, 0l);
         iqDeviceName = getIntent().getStringExtra(EXTRA_IQDEVICE_NAME);
+
+        if (iqDeviceIdentifier != 0l && iqDeviceName != null)
+        {
+            sharedPreferences.setIQDeviceName(iqDeviceName);
+            sharedPreferences.setIQDeviceIdentifier(iqDeviceIdentifier);
+
+            actionLog = new SizedStackWithReversedGetter<String>(Constants.ACTION_LOG_SIZE);
+        }
+        else
+        {
+            iqDeviceIdentifier = sharedPreferences.getIQDeviceIdentifier();
+            iqDeviceName = sharedPreferences.getIQDeviceName();
+
+            actionLog = new SizedStackWithReversedGetter<String>(Constants.ACTION_LOG_SIZE, sharedPreferences.getActionLogHistory());
+        }
+
+        setTitle(getString(R.string.console_title));
+
+        setContentView(R.layout.console);
 
         ((TextView) findViewById(R.id.devicename)).setText(iqDeviceName);
 
@@ -130,7 +150,7 @@ public class Console extends ListActivity
 
         setListAdapter(actionLogAdapter);
 
-        if (!isServiceRunning())
+        if (!Service.isRunning(this))
         {
             connectIQ = ConnectIQ.getInstance(this, ConnectIQ.IQConnectType.WIRELESS);
             connectIQ.initialize(this, true, new ConnectIQ.ConnectIQListener()
@@ -160,6 +180,10 @@ public class Console extends ListActivity
                 }
             });
         }
+        else
+        {
+            bindServiceConnection();
+        }
     }
 
     @Override
@@ -167,22 +191,9 @@ public class Console extends ListActivity
     {
         super.onPause();
 
+        sharedPreferences.setActionLogHistory(actionLog.toStringArray());
+
         unregisterFromAllConnectIQEventsAndShutdownSDK();
-    }
-
-    private boolean isServiceRunning()
-    {
-        final ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-        {
-            if (Service.class.getName().equals(service.service.getClassName()))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void shutdownServiceComponents()
@@ -288,18 +299,12 @@ public class Console extends ListActivity
 
                     addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
-                    final IQSharedPreferences iqSharedPreferences = IQSharedPreferences.getInstance(getApplicationContext());
-                    iqSharedPreferences.setDeviceIdentifier(iqDevice.getDeviceIdentifier());
-                    iqSharedPreferences.setDeviceName(iqDevice.getFriendlyName());
-
-                    final HueSharedPreferences hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
-
                     final Intent serviceIntent = new Intent(Service.class.getName());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
-                    serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, hueSharedPreferences.getLastConnectedIPAddress());
-                    serviceIntent.putExtra(Service.EXTRA_PHHUE_USER_NAME, hueSharedPreferences.getUsername());
-                    serviceIntent.putExtra(Service.EXTRA_PHHUE_LIGHT_IDS_AND_NAMES, hueSharedPreferences.getLightIdsAndNames());
+                    serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, sharedPreferences.getHueLastConnectedIPAddress());
+                    serviceIntent.putExtra(Service.EXTRA_PHHUE_USER_NAME, sharedPreferences.getHueLastConnectedUsername());
+                    serviceIntent.putExtra(Service.EXTRA_PHHUE_LIGHT_IDS_AND_NAMES, sharedPreferences.getHueLightIdsAndNames());
 
                     startService(serviceIntent);
 
@@ -488,6 +493,16 @@ public class Console extends ListActivity
             this.maxSize = size;
         }
 
+        public SizedStackWithReversedGetter(int size, String[] elements)
+        {
+            this(size);
+
+            for (String element : elements)
+            {
+                this.push(element);
+            }
+        }
+
         @Override
         public Object push(Object object)
         {
@@ -503,6 +518,19 @@ public class Console extends ListActivity
         public T get(int location)
         {
             return location >= 0 && location < size() ? super.get((size() - location) - 1) : super.get(location);
+        }
+
+        public String[] toStringArray()
+        {
+            Enumeration<T> elements = this.elements();
+            ArrayList<String> arrayList = new ArrayList<String>(this.size());
+
+            while (elements.hasMoreElements())
+            {
+                arrayList.add((String) elements.nextElement());
+            }
+
+            return arrayList.toArray(new String[arrayList.size()]);
         }
     }
 }

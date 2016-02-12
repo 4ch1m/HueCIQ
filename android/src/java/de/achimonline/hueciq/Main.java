@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
@@ -28,15 +27,21 @@ public class Main extends Activity
     private static final String LOG_PREFIX = Main.class.getSimpleName() + " - ";
 
     private PHHueSDK phHueSDK;
-    private HueSharedPreferences hueSharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
+        if (Service.isRunning(this))
+        {
+            startActivity(Helpers.getIntent(this, Console.class));
+        }
+
         phHueSDK = PHHueSDK.create();
-        hueSharedPreferences = HueSharedPreferences.getInstance(getApplicationContext());
+
+        sharedPreferences = SharedPreferences.getInstance(getApplicationContext());
 
         setTitle(getString(R.string.app_name));
 
@@ -49,12 +54,7 @@ public class Main extends Activity
 
     public void start(View view)
     {
-        final Intent intent = new Intent(Main.this, HueBridgeList.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        startActivity(intent);
+        startActivity(Helpers.getIntent(this, HueBridgeList.class));
     }
 
     @Override
@@ -89,15 +89,15 @@ public class Main extends Activity
         }
 
         final PHAccessPoint phAccessPoint = new PHAccessPoint();
-        phAccessPoint.setIpAddress(hueSharedPreferences.getLastConnectedIPAddress());
-        phAccessPoint.setUsername(hueSharedPreferences.getUsername());
+        phAccessPoint.setIpAddress(sharedPreferences.getHueLastConnectedIPAddress());
+        phAccessPoint.setUsername(sharedPreferences.getHueLastConnectedUsername());
 
         if (phHueSDK.isAccessPointConnected(phAccessPoint))
         {
             phHueSDK.setDisconnectedAccessPoint(Arrays.asList(phAccessPoint));
         }
 
-        hueSharedPreferences.setLastConnectedIPAddress("");
+        sharedPreferences.setHueLastConnectedIPAddress("");
 
         final Toast toast = Toast.makeText(this, getString(R.string.cached_bridge_info_cleared), Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);

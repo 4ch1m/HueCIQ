@@ -54,4 +54,9 @@
     <string name="action_log_background_service_started">Hintergrunddienst gestartet.</string>
     <string name="action_log_background_service_stopped">Hintergrunddienst gestoppt.</string>
 
+    <!-- *** -->
+
+    <string name="notification_title">HueCIQ Hintergrunddienst</string>
+    <string name="notification_text">Läuft &#8230;</string>
+
 </resources>
