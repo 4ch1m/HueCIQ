@@ -30,6 +30,8 @@ import java.util.Stack;
 
 public class Console extends ListActivity
 {
+    public static boolean isRunning = false;
+
     private static final String LOG_PREFIX = Console.class.getSimpleName() + " - ";
 
     private static final String STATE_ACTION_LOG = "actionLog";
@@ -105,6 +107,8 @@ public class Console extends ListActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        isRunning = true;
 
         sharedPreferences = SharedPreferences.getInstance(getApplicationContext());
 
@@ -196,7 +200,22 @@ public class Console extends ListActivity
         unregisterFromAllConnectIQEventsAndShutdownSDK();
     }
 
-    private void shutdownServiceComponents()
+    @Override
+    protected void onDestroy()
+    {
+        sanitize();
+
+        isRunning = false;
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+    }
+
+    private void removeListenerAndUnbindService()
     {
         try
         {
@@ -221,7 +240,10 @@ public class Console extends ListActivity
                 Log.e(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while trying to remove unbind the service.");
             }
         }
+    }
 
+    private void stopService()
+    {
         try
         {
             stopService(new Intent(Service.class.getName()));
@@ -395,6 +417,7 @@ public class Console extends ListActivity
         {
             case R.id.close_app:
                 sanitize();
+                stopService();
                 finish();
                 break;
             case R.id.clear_log:
@@ -413,7 +436,7 @@ public class Console extends ListActivity
 
     private void sanitize()
     {
-        shutdownServiceComponents();
+        removeListenerAndUnbindService();
         unregisterFromAllConnectIQEventsAndShutdownSDK();
     }
 
