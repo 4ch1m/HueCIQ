@@ -104,6 +104,8 @@ public class IQDeviceList extends ListActivity
                 Log.wtf(getString(R.string.app_log_tag), LOG_PREFIX + "Exception while trying to shutdown the CIQ-SDK.");
             }
         }
+
+        finish();
     }
 
     @Override

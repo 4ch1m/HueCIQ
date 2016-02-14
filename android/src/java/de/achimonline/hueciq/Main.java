@@ -34,7 +34,7 @@ public class Main extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        if (Service.isRunning(this))
+        if (Console.isRunning)
         {
             startActivity(Helpers.getIntent(this, Console.class));
         }
