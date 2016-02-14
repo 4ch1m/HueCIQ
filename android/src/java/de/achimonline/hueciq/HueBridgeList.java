@@ -300,14 +300,6 @@ public class HueBridgeList extends ListActivity
     }
 
     @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        finish();
-    }
-
-    @Override
     public void onDestroy()
     {
         if (Constants.LOG_ACTIVE)
