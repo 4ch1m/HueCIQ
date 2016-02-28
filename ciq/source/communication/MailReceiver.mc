@@ -3,6 +3,7 @@ using Toybox.Communications as Comm;
 
 class MailReceiver extends App.AppBase {
     function initialize() {
+        Comm.emptyMailbox();
         Comm.setMailboxListener( method(:onMail) );
 
         // ------------------------
