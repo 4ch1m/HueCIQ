@@ -11,7 +11,7 @@
     <string name="bridgelist_select_bridge">Bitte eine Bridge zur Nutzung dieser App suchen und auswählen.</string>
 
     <string name="pushlinkauthentication_title">Authentifizierung</string>
-    <string name="pushlinkauthentication_text">Bitten den Knopf an der Brücke drücken.</string>
+    <string name="pushlinkauthentication_text">Bitten den Knopf an der Bridge drücken.</string>
 
     <string name="menu_clear_cached_bridge_info">Zwischengespeicherte Bridge-Infos bereinigen</string>
     <string name="menu_about">Über</string>
@@ -37,10 +37,13 @@
     <!-- *** -->
 
     <string name="console_title">HueCIQ Konsole</string>
-    <string name="console_device_name">Gerätename:</string>
+    <string name="console_device_name">ConnectIQ Gerätename:</string>
+    <string name="console_bridge_ip">hue Bridge IP:</string>
     <string name="console_actionlog">Aktionen:</string>
+    <string name="console_toast_test_lights">Deine Lampen sollten jetzt aufleuchten.</string>
 
     <string name="menu_clear_log">Log löschen</string>
+    <string name="menu_test_lights">Lampen testen</string>
     <string name="menu_exit_app">%1$s beenden</string>
 
     <!-- *** -->
