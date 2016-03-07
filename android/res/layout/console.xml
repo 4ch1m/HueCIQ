@@ -29,6 +29,19 @@
                       android:textColor="@android:color/white"
                       tools:text="fenix 3"/>
 
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:textColor="@android:color/darker_gray"
+                      android:text="@string/console_bridge_ip"/>
+
+            <TextView android:id="@+id/bridgeip"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:textColor="@android:color/white"
+                      tools:text="111.222.333.444"/>
+
         </LinearLayout>
 
     </ScrollView>

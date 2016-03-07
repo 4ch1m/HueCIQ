@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.garmin.android.connectiq.ConnectIQ;
 import com.garmin.android.connectiq.IQApp;
 import com.garmin.android.connectiq.IQDevice;
@@ -43,6 +44,7 @@ public class Console extends ListActivity
 
     private long iqDeviceIdentifier;
     private String iqDeviceName;
+    private String bridgeIP;
 
     private SizedStackWithReversedGetter<String> actionLog;
 
@@ -114,6 +116,7 @@ public class Console extends ListActivity
 
         iqDeviceIdentifier = getIntent().getLongExtra(EXTRA_IQDEVICE_IDENTIFIER, 0l);
         iqDeviceName = getIntent().getStringExtra(EXTRA_IQDEVICE_NAME);
+        bridgeIP = sharedPreferences.getHueLastConnectedIPAddress();
 
         if (iqDeviceIdentifier != 0l && iqDeviceName != null)
         {
@@ -135,6 +138,7 @@ public class Console extends ListActivity
         setContentView(R.layout.console);
 
         ((TextView) findViewById(R.id.devicename)).setText(iqDeviceName);
+        ((TextView) findViewById(R.id.bridgeip)).setText(bridgeIP);
 
         final TextView headerView = new TextView(this);
         headerView.setText(R.string.console_actionlog);
@@ -423,6 +427,10 @@ public class Console extends ListActivity
             case R.id.clear_log:
                 actionLog.clear();
                 actionLogAdapter.notifyDataSetChanged();
+                break;
+            case R.id.test_lights:
+                new HueSimpleAPIClient(sharedPreferences.getHueLastConnectedIPAddress(), sharedPreferences.getHueLastConnectedUsername()).testLights();
+                Toast.makeText(this, getString(R.string.console_toast_test_lights), Toast.LENGTH_LONG).show();
                 break;
         }
 

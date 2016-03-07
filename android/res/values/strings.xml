@@ -37,10 +37,13 @@
     <!-- *** -->
 
     <string name="console_title">HueCIQ Console</string>
-    <string name="console_device_name">Device name:</string>
+    <string name="console_device_name">ConnectIQ device name:</string>
+    <string name="console_bridge_ip">hue bridge IP:</string>
     <string name="console_actionlog">Action log:</string>
+    <string name="console_toast_test_lights">Your lights should be flashing now.</string>
 
     <string name="menu_clear_log">Clear log</string>
+    <string name="menu_test_lights">Test lights</string>
     <string name="menu_exit_app">Exit %1$s</string>
 
     <!-- *** -->
