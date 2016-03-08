@@ -2,14 +2,12 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-const NEW_LINE = "\n";
-
 class LightPicker extends Ui.Picker {
-    const LIGHT_ITEM_SEPARATOR = "|";
-    const LIGHT_ID_SEPARATOR = ";";
+    static const LIGHT_ITEM_SEPARATOR = "|";
+    static const LIGHT_ID_SEPARATOR = ";";
 
     function initialize() {
-        var knownLights = App.getApp().getProperty(HueCIQApp.PROPERTY_KNOWN_LIGHTS);
+        var knownLights = App.getApp().getProperty("known_lights");
         var allLightsItemArray = [Ui.loadResource(Rez.Strings.lightPickerAll)];
 
         var pickerItems;
@@ -24,7 +22,7 @@ class LightPicker extends Ui.Picker {
 
             for(var i = 0; i < knownLightItems.size(); i++) {
                 knownLightIdAndName = Stringz.split(knownLightItems[i], LIGHT_ID_SEPARATOR);
-                formattedLightItemsArray[i] = "#" + knownLightIdAndName[0] + NEW_LINE + knownLightIdAndName[1];
+                formattedLightItemsArray[i] = "#" + knownLightIdAndName[0] + "\n" + knownLightIdAndName[1];
             }
 
             pickerItems = Arrayz.join(allLightsItemArray, formattedLightItemsArray);
@@ -59,11 +57,11 @@ class LightPickerDelegate extends Ui.PickerDelegate {
         if(values[0].equals(Ui.loadResource(Rez.Strings.lightPickerAll))) {
             selectedLight = 0;
         } else {
-            var splitted = Stringz.split(values[0], NEW_LINE);
+            var splitted = Stringz.split(values[0], "\n");
             selectedLight = splitted[0].substring(1, splitted[0].length());
         }
 
-        App.getApp().setProperty(HueCIQApp.PROPERTY_SELECTED_LIGHT, selectedLight);
+        App.getApp().setProperty("selected_light", selectedLight);
 
         Ui.pushView(new ActionPicker(), new ActionPickerDelegate(), Ui.SLIDE_IMMEDIATE);
     }

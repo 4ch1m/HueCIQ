@@ -31,7 +31,7 @@ class SwitchPickerDelegate extends Ui.PickerDelegate {
     function onAccept(values) {
         Att.playTone(Att.TONE_KEY);
 
-        var selectedLightId = App.getApp().getProperty(HueCIQApp.PROPERTY_SELECTED_LIGHT);
+        var selectedLightId = App.getApp().getProperty("selected_light");
 
         if(values[0] == Rez.Strings.switchPickerOn) {
             Transmitter.switchOn(selectedLightId);

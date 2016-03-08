@@ -1,4 +1,3 @@
-using Toybox.Application as App;
 using Toybox.Communications as Comm;
 using Toybox.Graphics as Gfx;
 using Toybox.Attention as Att;

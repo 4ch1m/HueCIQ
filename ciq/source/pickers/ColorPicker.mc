@@ -37,6 +37,6 @@ class ColorPickerDelegate extends Ui.PickerDelegate {
     function onAccept(values) {
         Att.playTone(Att.TONE_KEY);
 
-        Transmitter.setColor(App.getApp().getProperty(HueCIQApp.PROPERTY_SELECTED_LIGHT), values[0]);
+        Transmitter.setColor(App.getApp().getProperty("selected_light"), values[0]);
     }
 }
