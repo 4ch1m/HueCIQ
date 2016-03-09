@@ -91,7 +91,9 @@ public class SharedPreferences
         }
         else
         {
-            return false;
+            sharedPreferencesEditor.remove(HUE_LIGHT_IDS_AND_NAMES);
+
+            return true;
         }
     }
 

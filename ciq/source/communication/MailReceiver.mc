@@ -1,7 +1,7 @@
 using Toybox.Application as App;
 using Toybox.Communications as Comm;
 
-class MailReceiver extends App.AppBase {
+class MailReceiver {
     function initialize() {
         Comm.setMailboxListener( method(:onMail) );
     }
@@ -19,7 +19,7 @@ class MailReceiver extends App.AppBase {
         }
 
         if (latestKnownLights != null) {
-            App.getApp().setProperty(HueCIQApp.PROPERTY_KNOWN_LIGHTS, latestKnownLights);
+            App.getApp().setProperty("known_lights", latestKnownLights);
         }
 
         Comm.emptyMailbox();

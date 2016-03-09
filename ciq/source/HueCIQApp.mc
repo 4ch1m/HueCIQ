@@ -3,12 +3,7 @@ using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 using Toybox.Timer as Tmr;
 
-const SPLASH_TIMER_VALUE = 2000;
-
 class HueCIQApp extends App.AppBase {
-    static const PROPERTY_KNOWN_LIGHTS = "known_lights";
-    static const PROPERTY_SELECTED_LIGHT = "selected_light";
-
     function initialize() {
         AppBase.initialize();
     }
@@ -49,7 +44,7 @@ class HueCIQView extends Ui.View {
         version.setLocation(version.locX, Sys.getDeviceSettings().screenHeight - 30);
 
         timer = new Tmr.Timer();
-        timer.start(method(:showLightPicker), HueCIQApp.SPLASH_TIMER_VALUE, false);
+        timer.start(method(:showLightPicker), 2000, false);
     }
 
     function onUpdate(dc) {

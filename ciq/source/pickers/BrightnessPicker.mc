@@ -4,9 +4,9 @@ using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
 
 class BrightnessPicker extends Ui.Picker {
-    const MIN_BRIGHTNESS_VALUE = 10;
-    const MAX_BRIGHTNESS_VALUE = 100;
-    const STEP_BRIGHTNESS_VALUE = 10;
+    static const MIN_BRIGHTNESS_VALUE = 10;
+    static const MAX_BRIGHTNESS_VALUE = 100;
+    static const STEP_BRIGHTNESS_VALUE = 10;
 
     function initialize() {
         var brightnessSteps = new [ MAX_BRIGHTNESS_VALUE / STEP_BRIGHTNESS_VALUE ];
@@ -41,6 +41,6 @@ class BrightnessPickerDelegate extends Ui.PickerDelegate {
     function onAccept(values) {
         Att.playTone(Att.TONE_KEY);
 
-        Transmitter.setBrightness(App.getApp().getProperty(HueCIQApp.PROPERTY_SELECTED_LIGHT), values[0]);
+        Transmitter.setBrightness(App.getApp().getProperty("selected_light"), values[0]);
     }
 }
