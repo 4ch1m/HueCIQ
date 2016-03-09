@@ -98,6 +98,7 @@ public class Main extends Activity
         }
 
         sharedPreferences.setHueLastConnectedIPAddress("");
+        sharedPreferences.setHueLightIdsAndNames(null);
 
         final Toast toast = Toast.makeText(this, getString(R.string.cached_bridge_info_cleared), Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);

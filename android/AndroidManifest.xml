@@ -2,8 +2,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.achimonline.hueciq"
-          android:versionCode="11"
-          android:versionName="2.7">
+          android:versionCode="12"
+          android:versionName="2.8">
 
     <uses-sdk android:minSdkVersion="12"/>
 
@@ -33,7 +33,6 @@
         <activity android:name="de.achimonline.hueciq.Console"
                   android:launchMode="singleTask"/>
 
-        <!--<service android:name="de.achimonline.hueciq.Service">-->
         <service android:name="de.achimonline.hueciq.Service"
                  android:process=":serviceprocess">
             <intent-filter>
