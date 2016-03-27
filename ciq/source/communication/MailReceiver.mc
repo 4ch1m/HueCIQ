@@ -6,22 +6,26 @@ class MailReceiver {
         Comm.setMailboxListener( method(:onMail) );
     }
 
-    function onMail(mailIter)
-    {
-        var latestKnownLights = null;
+    function onMail(mailIter) {
+        try {
+            var latestKnownLights = null;
 
-        var mail = mailIter.next();
+            var mail = mailIter.next();
 
-        while( mail != null )
-        {
-            latestKnownLights = mail;
-            mail = mailIter.next();
+            while (mail != null) {
+                latestKnownLights = mail;
+                mail = mailIter.next();
+            }
+
+            if (latestKnownLights != null) {
+                App.getApp().setProperty("known_lights", latestKnownLights);
+            }
         }
-
-        if (latestKnownLights != null) {
-            App.getApp().setProperty("known_lights", latestKnownLights);
+        catch( ex ) {
+            // do nothing ...
         }
-
-        Comm.emptyMailbox();
+        finally {
+            Comm.emptyMailbox();
+        }
     }
 }
