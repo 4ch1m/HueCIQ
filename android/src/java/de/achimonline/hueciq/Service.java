@@ -310,7 +310,10 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
                     }
                     catch (RemoteException e)
                     {
-                        Log.w(getString(R.string.app_log_tag), LOG_PREFIX + "Failed to notify service-listener! " + serviceListener, e);
+                        if (Constants.LOG_ACTIVE)
+                        {
+                            Log.w(getString(R.string.app_log_tag), LOG_PREFIX + "Failed to notify service-listener! " + serviceListener, e);
+                        }
                     }
                 }
             }
