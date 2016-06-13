@@ -2,6 +2,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
+using Toybox.System as Sys;
 
 class BrightnessPicker extends Ui.Picker {
     static const MIN_BRIGHTNESS_VALUE = 10;
@@ -39,7 +40,9 @@ class BrightnessPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        Att.playTone(Att.TONE_KEY);
+        if (Sys.getDeviceSettings().tonesOn) {
+            Att.playTone(Att.TONE_KEY);
+        }
 
         Transmitter.setBrightness(App.getApp().getProperty("selected_light"), values[0]);
     }
