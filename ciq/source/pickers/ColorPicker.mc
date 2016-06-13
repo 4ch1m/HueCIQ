@@ -2,6 +2,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
+using Toybox.System as Sys;
 
 class ColorPicker extends Ui.Picker {
     var factory;
@@ -35,7 +36,9 @@ class ColorPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        Att.playTone(Att.TONE_KEY);
+        if (Sys.getDeviceSettings().tonesOn) {
+            Att.playTone(Att.TONE_KEY);
+        }
 
         Transmitter.setColor(App.getApp().getProperty("selected_light"), values[0]);
     }

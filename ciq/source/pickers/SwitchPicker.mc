@@ -2,6 +2,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
+using Toybox.System as Sys;
 
 class SwitchPicker extends Ui.Picker {
     function initialize() {
@@ -29,7 +30,9 @@ class SwitchPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        Att.playTone(Att.TONE_KEY);
+        if (Sys.getDeviceSettings().tonesOn) {
+            Att.playTone(Att.TONE_KEY);
+        }
 
         var selectedLightId = App.getApp().getProperty("selected_light");
 
