@@ -8,12 +8,6 @@ class HueCIQApp extends App.AppBase {
         AppBase.initialize();
     }
 
-    function onStart() {
-    }
-
-    function onStop() {
-    }
-
     function getInitialView() {
         return [ new HueCIQView(), new HueCIQDelegate() ];
     }
