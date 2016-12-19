@@ -6,6 +6,8 @@ class ColorPickerFactory extends Ui.PickerFactory {
     var mColorWheel;
 
     function initialize(colors) {
+        PickerFactory.initialize();
+
         mColorWheel = new ColorWheel({:colors => colors});
     }
 
