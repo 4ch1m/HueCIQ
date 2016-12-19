@@ -17,8 +17,10 @@ case "${1}" in
       ;;
    package)
       ;;
+   clean)
+      ;;
    *)
-      echo "Usage: `basename ${0}` {build|package}"
+      echo "Usage: `basename ${0}` {build|package|clean}"
       exit 1
       ;;
 esac
@@ -93,6 +95,14 @@ function concat_params_for_package
     PARAMS+="--rez ${RESOURCES} "
 }
 
+function clean
+{
+    cd ${PROJECT_HOME}
+
+    rm -f "${PROJECT_HOME}/${APP_NAME}"*.prg*
+    rm -f "${PROJECT_HOME}/${APP_NAME}"*.iq
+}
+
 ###
 
 case "${1}" in
@@ -102,13 +112,14 @@ case "${1}" in
    package)
         concat_params_for_package
         ;;
+   clean)
+        clean
+        exit 0
+        ;;
 esac
 
 ###
 
 cd ${PROJECT_HOME}
-
-rm -f "${PROJECT_HOME}/${APP_NAME}"*.prg*
-rm -f "${PROJECT_HOME}/${APP_NAME}"*.iq
 
 java -jar "${MB_HOME}/bin/monkeybrains.jar" ${PARAMS} ${SOURCES}
