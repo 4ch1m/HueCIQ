@@ -2,10 +2,6 @@
     <iq:application entry="HueCIQApp" id="61CF2E54D846489B9244C13B9C67BB99" launcherIcon="@Drawables.LauncherIcon" minSdkVersion="1.2.1" name="@Strings.AppName" type="watch-app">
 
         <iq:products>
-            <iq:product id="square_watch"/>
-            <iq:product id="tall_watch"/>
-            <iq:product id="round_watch"/>
-            <iq:product id="semi_round_watch"/>
             <iq:product id="fr630"/>
             <iq:product id="fr235"/>
             <iq:product id="fr735xt"/>
