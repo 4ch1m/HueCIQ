@@ -38,7 +38,7 @@ class HueCIQView extends Ui.View {
         version.setLocation(version.locX, Sys.getDeviceSettings().screenHeight - 30);
 
         timer = new Tmr.Timer();
-        timer.start(method(:showLightPicker), 2000, false);
+        timer.start(method(:showTargetPicker), 2000, false);
     }
 
     function onUpdate(dc) {
@@ -49,8 +49,8 @@ class HueCIQView extends Ui.View {
        timer.stop();
     }
 
-    function showLightPicker() {
-        Ui.pushView(new LightPicker(), new LightPickerDelegate(), Ui.SLIDE_IMMEDIATE);
+    function showTargetPicker() {
+        Ui.pushView(new TargetPicker(), new TargetPickerDelegate(), Ui.SLIDE_IMMEDIATE);
     }
 }
 
@@ -60,6 +60,6 @@ class HueCIQDelegate extends Ui.BehaviorDelegate {
     }
 
     function onSelect() {
-        Ui.pushView(new LightPicker(), new LightPickerDelegate(), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new TargetPicker(), new TargetPickerDelegate(), Ui.SLIDE_IMMEDIATE);
     }
 }

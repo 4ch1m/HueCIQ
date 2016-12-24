@@ -12,10 +12,12 @@ class BrightnessPicker extends Ui.Picker {
     function initialize() {
         var brightnessSteps = new [ MAX_BRIGHTNESS_VALUE / STEP_BRIGHTNESS_VALUE ];
         var brightnessStep = MIN_BRIGHTNESS_VALUE;
+
         for (var i=0; i < (MAX_BRIGHTNESS_VALUE / STEP_BRIGHTNESS_VALUE); i+=1) {
             brightnessSteps[i] = brightnessStep.toString();
             brightnessStep += STEP_BRIGHTNESS_VALUE;
         }
+
         var title = new Ui.Text({:text=>Rez.Strings.brightnessPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
         var factory = new WordPickerFactory(brightnessSteps, {:font=>Gfx.FONT_MEDIUM});
 
@@ -44,6 +46,6 @@ class BrightnessPickerDelegate extends Ui.PickerDelegate {
             Att.playTone(Att.TONE_KEY);
         }
 
-        Transmitter.setBrightness(App.getApp().getProperty("selected_light"), values[0]);
+        Transmitter.setBrightness(App.getApp().getProperty("selected_id"), values[0]);
     }
 }

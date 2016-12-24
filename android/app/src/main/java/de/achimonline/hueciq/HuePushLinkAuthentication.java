@@ -135,9 +135,6 @@ public class HuePushLinkAuthentication extends Activity
     {
         super.onDestroy();
 
-        if (listener != null)
-        {
-            phHueSDK.getNotificationManager().unregisterSDKListener(listener);
-        }
+        phHueSDK.getNotificationManager().unregisterSDKListener(listener);
     }
 }

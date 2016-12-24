@@ -14,6 +14,7 @@ public class SharedPreferences
     private static final String HUE_LAST_CONNECTED_USERNAME = "HueLastConnectedUsername";
     private static final String HUE_LAST_CONNECTED_IP_ADDRESS = "HueLastConnectedIP";
     private static final String HUE_LIGHT_IDS_AND_NAMES = "HueLightIDsAndNames";
+    private static final String HUE_GROUP_IDS_AND_NAMES = "HueGroupIDsAndNames";
 
     private static final String IQ_DEVICE_IDENTIFIER = "IQDeviceIdentifier";
     private static final String IQ_DEVICE_NAME = "IQDeviceName";
@@ -69,32 +70,22 @@ public class SharedPreferences
 
     public HashMap<String, String> getHueLightIdsAndNames()
     {
-        String lightIdsAndNames = sharedPreferences.getString(HUE_LIGHT_IDS_AND_NAMES, "");
-
-        if (lightIdsAndNames != null && !lightIdsAndNames.isEmpty())
-        {
-            return new Gson().fromJson(lightIdsAndNames, GSON_MAP_TYPE);
-        }
-        else
-        {
-            return new HashMap<String, String>();
-        }
+        return getStringMap(HUE_LIGHT_IDS_AND_NAMES);
     }
 
     public boolean setHueLightIdsAndNames(HashMap<String, String> lightIdsAndNames)
     {
-        if (lightIdsAndNames != null && !lightIdsAndNames.isEmpty())
-        {
-            sharedPreferencesEditor.putString(HUE_LIGHT_IDS_AND_NAMES, new Gson().toJson(lightIdsAndNames, GSON_MAP_TYPE));
+        return setStringMap(HUE_LIGHT_IDS_AND_NAMES, lightIdsAndNames);
+    }
 
-            return sharedPreferencesEditor.commit();
-        }
-        else
-        {
-            sharedPreferencesEditor.remove(HUE_LIGHT_IDS_AND_NAMES);
+    public HashMap<String, String> getHueGroupIdsAndNames()
+    {
+        return getStringMap(HUE_GROUP_IDS_AND_NAMES);
+    }
 
-            return true;
-        }
+    public boolean setHueGroupIdsAndNames(HashMap<String, String> groupIdsAndNames)
+    {
+        return setStringMap(HUE_GROUP_IDS_AND_NAMES, groupIdsAndNames);
     }
 
     public Long getIQDeviceIdentifier()
@@ -131,5 +122,35 @@ public class SharedPreferences
         sharedPreferencesEditor.putString(ACTION_LOG_HISTORY, new Gson().toJson(logHistory));
 
         return sharedPreferencesEditor.commit();
+    }
+
+    private HashMap<String, String> getStringMap(String preferencesKey)
+    {
+        String jsonString = sharedPreferences.getString(preferencesKey, "");
+
+        if (jsonString != null && !jsonString.isEmpty())
+        {
+            return new Gson().fromJson(jsonString, GSON_MAP_TYPE);
+        }
+        else
+        {
+            return new HashMap<String, String>();
+        }
+    }
+
+    private boolean setStringMap(String preferencesKey, HashMap<String, String> stringMap)
+    {
+        if (stringMap != null && !stringMap.isEmpty())
+        {
+            sharedPreferencesEditor.putString(preferencesKey, new Gson().toJson(stringMap, GSON_MAP_TYPE));
+
+            return sharedPreferencesEditor.commit();
+        }
+        else
+        {
+            sharedPreferencesEditor.remove(preferencesKey);
+
+            return true;
+        }
     }
 }

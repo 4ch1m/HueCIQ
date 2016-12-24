@@ -40,6 +40,6 @@ class ColorPickerDelegate extends Ui.PickerDelegate {
             Att.playTone(Att.TONE_KEY);
         }
 
-        Transmitter.setColor(App.getApp().getProperty("selected_light"), values[0]);
+        Transmitter.setColor(App.getApp().getProperty("selected_id"), values[0]);
     }
 }

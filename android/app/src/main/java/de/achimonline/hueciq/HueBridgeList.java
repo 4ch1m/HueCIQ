@@ -24,6 +24,7 @@ import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.hue.sdk.PHMessageType;
 import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 import com.philips.lighting.model.PHLight;
@@ -167,6 +168,7 @@ public class HueBridgeList extends ListActivity
             sharedPreferences.setHueLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
             sharedPreferences.setHueLastConnectedUsername(userName);
             sharedPreferences.setHueLightIdsAndNames(getAllLightIdsWithNames(phHueSDK.getSelectedBridge().getResourceCache().getAllLights()));
+            sharedPreferences.setHueGroupIdsAndNames(getAllGroupIdsWithNames(phHueSDK.getSelectedBridge().getResourceCache().getAllGroups()));
 
             PHWizardAlertDialog.getInstance().closeProgressDialog();
 
@@ -309,11 +311,7 @@ public class HueBridgeList extends ListActivity
 
         super.onDestroy();
 
-        if (phsdkListener != null)
-        {
-            phHueSDK.getNotificationManager().unregisterSDKListener(phsdkListener);
-        }
-
+        phHueSDK.getNotificationManager().unregisterSDKListener(phsdkListener);
         phHueSDK.disableAllHeartbeat();
     }
 
@@ -354,6 +352,18 @@ public class HueBridgeList extends ListActivity
         }
 
         return lightIdsAndNames;
+    }
+
+    private HashMap<String, String> getAllGroupIdsWithNames(List<PHGroup> phGroups)
+    {
+        final HashMap<String, String> groupIdsAndNames = new HashMap<String, String>();
+
+        for (PHGroup phGroup : phGroups)
+        {
+            groupIdsAndNames.put(phGroup.getIdentifier(), phGroup.getName());
+        }
+
+        return groupIdsAndNames;
     }
 
     private void startDeviceListActivity()

@@ -1,8 +1,15 @@
 <strings>
     <string id="authorBy">von</string>
-	
+
+    <string id="targetPickerTitle">Ziel</string>
+    <string id="targetPickerLight">Einzelne Lampe</string>
+    <string id="targetPickerGroup">Lampengruppe</string>
+
     <string id="lightPickerTitle">Lampe</string>
-    <string id="lightPickerAll">[ Alle ]</string>
+    <string id="lightPickerNA">---</string>
+
+    <string id="groupPickerTitle">Group</string>
+    <string id="groupPickerAll">[ Alle ]</string>
 
     <string id="actionPickerTitle">Aktion</string>
     <string id="actionPickerSwitch">An/Aus</string>

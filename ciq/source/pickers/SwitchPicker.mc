@@ -34,7 +34,7 @@ class SwitchPickerDelegate extends Ui.PickerDelegate {
             Att.playTone(Att.TONE_KEY);
         }
 
-        var selectedLightId = App.getApp().getProperty("selected_light");
+        var selectedLightId = App.getApp().getProperty("selected_id");
 
         if(values[0] == Rez.Strings.switchPickerOn) {
             Transmitter.switchOn(selectedLightId);

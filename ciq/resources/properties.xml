@@ -1,6 +1,7 @@
 <resources>
     <properties>
         <property id="known_lights" type="string"></property>
-        <property id="selected_light" type="string"></property>
+        <property id="known_groups" type="string"></property>
+        <property id="selected_id" type="string"></property>
     </properties>
 </resources>

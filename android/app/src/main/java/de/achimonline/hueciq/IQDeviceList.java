@@ -175,7 +175,7 @@ public class IQDeviceList extends ListActivity
                         {
                             if (Constants.LOG_ACTIVE)
                             {
-                                Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "CIQ-device-status changed; device=" + (device != null ? device.getFriendlyName() : "<unknown>") + ", status=" + status != null ? status.name() : "<unknown>");
+                                Log.i(getString(R.string.app_log_tag), LOG_PREFIX + "CIQ-device-status changed; device=" + (device != null ? device.getFriendlyName() : "<unknown>") + ", status=" + (status != null ? status.name() : "<unknown>"));
                             }
 
                             iqDeviceAdapter.updateDeviceStatus(device, status);

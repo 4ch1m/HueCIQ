@@ -19,9 +19,10 @@
     <string name="ciq_color_command_purple">purple</string>
 
     <string name="ciq_command_token_separator">_</string>
-    <string name="ciq_command_light_id_separator">-</string>
-    <string name="ciq_command_light_id_all">0</string>
+    <string name="ciq_command_id_separator">-</string>
+    <string name="ciq_command_group_id_prefix">*</string>
 
     <string name="ciq_mail_item_separator">|</string>
-    <string name="ciq_mail_item_light_separator">;</string>
+    <string name="ciq_mail_id_name_separator">;</string>
+    <string name="ciq_mail_light_group_separator">§</string>
 </resources>

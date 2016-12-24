@@ -1,5 +1,6 @@
 package de.achimonline.hueciq;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -44,7 +45,6 @@ public class Console extends ListActivity
 
     private long iqDeviceIdentifier;
     private String iqDeviceName;
-    private String bridgeIP;
 
     private SizedStackWithReversedGetter<String> actionLog;
 
@@ -116,7 +116,8 @@ public class Console extends ListActivity
 
         iqDeviceIdentifier = getIntent().getLongExtra(EXTRA_IQDEVICE_IDENTIFIER, 0l);
         iqDeviceName = getIntent().getStringExtra(EXTRA_IQDEVICE_NAME);
-        bridgeIP = sharedPreferences.getHueLastConnectedIPAddress();
+
+        String bridgeIP = sharedPreferences.getHueLastConnectedIPAddress();
 
         if (iqDeviceIdentifier != 0l && iqDeviceName != null)
         {
@@ -325,7 +326,7 @@ public class Console extends ListActivity
 
                     addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
-                    final Intent serviceIntent = new Intent(Service.class.getName());
+                    final Intent serviceIntent = new Intent(getApplicationContext(), Service.class);
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, sharedPreferences.getHueLastConnectedIPAddress());
@@ -429,7 +430,7 @@ public class Console extends ListActivity
                 actionLogAdapter.notifyDataSetChanged();
                 break;
             case R.id.test_lights:
-                new HueSimpleAPIClient(sharedPreferences.getHueLastConnectedIPAddress(), sharedPreferences.getHueLastConnectedUsername()).testLights();
+                new HueSimpleAPIClient(sharedPreferences.getHueLastConnectedIPAddress(), sharedPreferences.getHueLastConnectedUsername()).test();
                 Toast.makeText(this, getString(R.string.console_toast_test_lights), Toast.LENGTH_LONG).show();
                 break;
         }
@@ -437,9 +438,10 @@ public class Console extends ListActivity
         return true;
     }
 
+    @SuppressLint("WrongConstant")
     private void bindServiceConnection()
     {
-        bindService(new Intent(Service.class.getName()), serviceConnection, MODE_PRIVATE);
+        bindService(new Intent(getApplicationContext(), Service.class), serviceConnection, MODE_PRIVATE);
     }
 
     private void sanitize()
