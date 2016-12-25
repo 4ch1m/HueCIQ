@@ -54,6 +54,8 @@ public class Console extends ListActivity
 
     private SharedPreferences sharedPreferences;
 
+    private Intent serviceIntent;
+
     private ServiceListener.Stub serviceListener = new ServiceListener.Stub()
     {
         @Override
@@ -326,12 +328,13 @@ public class Console extends ListActivity
 
                     addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
-                    final Intent serviceIntent = new Intent(getApplicationContext(), Service.class);
+                    serviceIntent = new Intent(getApplicationContext(), Service.class);
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, sharedPreferences.getHueLastConnectedIPAddress());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_USER_NAME, sharedPreferences.getHueLastConnectedUsername());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_LIGHT_IDS_AND_NAMES, sharedPreferences.getHueLightIdsAndNames());
+                    serviceIntent.putExtra(Service.EXTRA_PHHUE_GROUP_IDS_AND_NAMES, sharedPreferences.getHueGroupIdsAndNames());
 
                     startService(serviceIntent);
 
@@ -441,7 +444,7 @@ public class Console extends ListActivity
     @SuppressLint("WrongConstant")
     private void bindServiceConnection()
     {
-        bindService(new Intent(getApplicationContext(), Service.class), serviceConnection, MODE_PRIVATE);
+        bindService(serviceIntent, serviceConnection, MODE_PRIVATE);
     }
 
     private void sanitize()
