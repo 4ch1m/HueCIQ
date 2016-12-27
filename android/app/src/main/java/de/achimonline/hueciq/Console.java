@@ -1,6 +1,5 @@
 package de.achimonline.hueciq;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -53,8 +52,6 @@ public class Console extends ListActivity
     private ServiceAPI serviceAPI;
 
     private SharedPreferences sharedPreferences;
-
-    private Intent serviceIntent;
 
     private ServiceListener.Stub serviceListener = new ServiceListener.Stub()
     {
@@ -328,7 +325,7 @@ public class Console extends ListActivity
 
                     addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
-                    serviceIntent = new Intent(getApplicationContext(), Service.class);
+                    final Intent serviceIntent = new Intent(new Intent(Service.class.getName()));
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, sharedPreferences.getHueLastConnectedIPAddress());
@@ -441,10 +438,9 @@ public class Console extends ListActivity
         return true;
     }
 
-    @SuppressLint("WrongConstant")
     private void bindServiceConnection()
     {
-        bindService(serviceIntent, serviceConnection, MODE_PRIVATE);
+        bindService(new Intent(Service.class.getName()), serviceConnection, MODE_PRIVATE);
     }
 
     private void sanitize()
