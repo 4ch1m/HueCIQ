@@ -27,4 +27,6 @@
     <string id="brightnessPickerTitle">Brightness</string>
     
     <string id="colorPickerTitle">Color</string>
+
+    <string id="playTonesTitle">Play Tones</string>
 </strings>

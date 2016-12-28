@@ -1,0 +1,5 @@
+<settings>
+    <setting propertyKey="@Properties.play_tones" title="@Strings.playTonesTitle">
+        <settingConfig type="boolean" />
+    </setting>
+</settings>

@@ -1,7 +1,6 @@
 using Toybox.Communications as Comm;
 using Toybox.Graphics as Gfx;
 using Toybox.Attention as Att;
-using Toybox.System as Sys;
 
 class Transmitter {
     static const SWITCH_COMMAND_PREFIX = "switch_";
@@ -64,13 +63,13 @@ class TransmitListener extends Comm.ConnectionListener {
     }
 
     function onComplete() {
-        if (Sys.getDeviceSettings().tonesOn) {
+        if (Helperz.playTone()) {
             Att.playTone(Att.TONE_START);
         }
     }
 
     function onError() {
-        if (Sys.getDeviceSettings().tonesOn) {
+        if (Helperz.playTone()) {
             Att.playTone(Att.TONE_ALERT_LO);
         }
     }

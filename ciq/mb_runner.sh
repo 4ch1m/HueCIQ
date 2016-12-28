@@ -163,6 +163,7 @@ function clean
 
     rm -f "${PROJECT_HOME}/${APP_NAME}"*.prg*
     rm -f "${PROJECT_HOME}/${APP_NAME}"*.iq
+    rm -f "${PROJECT_HOME}/${APP_NAME}"*.json
 }
 
 function start_simulator

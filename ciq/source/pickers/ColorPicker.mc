@@ -2,7 +2,6 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
-using Toybox.System as Sys;
 
 class ColorPicker extends Ui.Picker {
     var factory;
@@ -36,7 +35,7 @@ class ColorPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        if (Sys.getDeviceSettings().tonesOn) {
+        if (Helperz.playTone()) {
             Att.playTone(Att.TONE_KEY);
         }
 

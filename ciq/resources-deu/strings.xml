@@ -23,4 +23,6 @@
     <string id="brightnessPickerTitle">Helligkeit</string>
     
     <string id="colorPickerTitle">Farbe</string>
+
+    <string id="playTonesTitle">Töne Abspielen</string>
 </strings>
