@@ -50,8 +50,8 @@
 
     <string name="action_log_requesting_app_info">Requesting app-info from %1$s.</string>
     <string name="action_log_app_found">%1$s found on %2$s. Starting background service.</string>
-    <string name="action_log_light_infos_send_success">Available Hue light infos sent to device.</string>
-    <string name="action_log_light_infos_send_failure">Failure while trying to send Hue light infos to device.</string>
+    <string name="action_log_hue_infos_send_success">Available Hue light/group infos sent to device.</string>
+    <string name="action_log_hue_infos_send_failure">Failure while trying to send Hue light/group infos to device.</string>
     <string name="action_log_device_status_changed">Device status changed.</string>
     <string name="action_log_received_command">Received command</string>
     <string name="action_log_background_service_started">Background service started.</string>

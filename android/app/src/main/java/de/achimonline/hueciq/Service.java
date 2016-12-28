@@ -244,7 +244,7 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
                     {
                         if (ConnectIQ.IQMessageStatus.SUCCESS == iqMessageStatus)
                         {
-                            propagateAction(getString(R.string.action_log_light_infos_send_success));
+                            propagateAction(getString(R.string.action_log_hue_infos_send_success));
                         }
                         else
                         {
@@ -253,7 +253,7 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
                                 Log.e(getString(R.string.app_log_tag), LOG_PREFIX + "Failure while trying to send message to CIQ-device. (device=" + (iqDevice != null ? iqDevice.getFriendlyName() : "<unknown>") + ", messageStatus=" + (iqMessageStatus != null ? iqMessageStatus.name() : "<unknown>") + ")");
                             }
 
-                            propagateAction(getString(R.string.action_log_light_infos_send_failure));
+                            propagateAction(getString(R.string.action_log_hue_infos_send_failure));
                         }
                     }
                 });
