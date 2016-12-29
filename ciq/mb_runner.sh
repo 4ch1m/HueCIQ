@@ -164,6 +164,7 @@ function clean
     rm -f "${PROJECT_HOME}/${APP_NAME}"*.prg*
     rm -f "${PROJECT_HOME}/${APP_NAME}"*.iq
     rm -f "${PROJECT_HOME}/${APP_NAME}"*.json
+    rm -f "${PROJECT_HOME}/${APP_NAME}/sys.nfm"
 }
 
 function start_simulator
