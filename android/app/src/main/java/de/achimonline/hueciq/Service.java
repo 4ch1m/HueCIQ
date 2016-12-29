@@ -297,30 +297,37 @@ public class Service extends android.app.Service implements ConnectIQ.ConnectIQL
         }
     }
 
-    private void propagateAction(String action)
+    private void propagateAction(final String action)
     {
-        synchronized (serviceAction)
+        new Thread(new Runnable()
         {
-            serviceAction = action;
-
-            synchronized (serviceListeners)
+            @Override
+            public void run()
             {
-                for (ServiceListener serviceListener : serviceListeners)
+                synchronized (serviceAction)
                 {
-                    try
+                    serviceAction = action;
+
+                    synchronized (serviceListeners)
                     {
-                        serviceListener.handleAction();
-                    }
-                    catch (RemoteException e)
-                    {
-                        if (Constants.LOG_ACTIVE)
+                        for (ServiceListener serviceListener : serviceListeners)
                         {
-                            Log.w(getString(R.string.app_log_tag), LOG_PREFIX + "Failed to notify service-listener! " + serviceListener, e);
+                            try
+                            {
+                                serviceListener.handleAction();
+                            }
+                            catch (RemoteException e)
+                            {
+                                if (Constants.LOG_ACTIVE)
+                                {
+                                    Log.w(getString(R.string.app_log_tag), LOG_PREFIX + "Failed to notify service-listener! " + serviceListener, e);
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
+        }).start();
     }
 
     private void registerForConnectIQEvents()
