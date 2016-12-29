@@ -4,9 +4,12 @@ using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
 
 class SwitchPicker extends Ui.Picker {
+    static const SWITCHES = {"on" => Stringz.wrap(Ui.loadResource(Rez.Strings.switchPickerOn)),
+                             "off" => Stringz.wrap(Ui.loadResource(Rez.Strings.switchPickerOff))};
+
     function initialize() {
-        var title = new Ui.Text({:text=>Rez.Strings.switchPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
-        var factory = new WordPickerFactory([Rez.Strings.switchPickerOn, Rez.Strings.switchPickerOff], {:font=>Gfx.FONT_MEDIUM});
+        var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.switchPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        var factory = new WordPickerFactory([SWITCHES["on"], SWITCHES["off"]], {:font=>Gfx.FONT_MEDIUM});
 
         Picker.initialize({:title=>title, :pattern=>[factory]});
     }
@@ -33,13 +36,12 @@ class SwitchPickerDelegate extends Ui.PickerDelegate {
             Att.playTone(Att.TONE_KEY);
         }
 
-        var selectedLightId = App.getApp().getProperty("selected_id");
+        var selectedId = App.getApp().getProperty("selected_id");
 
-        if(values[0] == Rez.Strings.switchPickerOn) {
-            Transmitter.switchOn(selectedLightId);
-        }
-        else if(values[0] == Rez.Strings.switchPickerOff) {
-            Transmitter.switchOff(selectedLightId);
+        if (values[0] == SwitchPicker.SWITCHES["on"]) {
+            Transmitter.switchOn(selectedId);
+        } else {
+            Transmitter.switchOff(selectedId);
         }
     }
 }

@@ -17,15 +17,15 @@ class GroupPicker extends Ui.Picker {
 
             var formattedGroupItemsArray = new [knownGroupItems.size()];
 
-            for(var i = 0; i < knownGroupItems.size(); i++) {
+            for (var i=0; i < knownGroupItems.size(); i++) {
                 knownGroupIdAndName = Stringz.split(knownGroupItems[i], Constantz.ID_NAME_SEPARATOR);
-                formattedGroupItemsArray[i] = "#" + knownGroupIdAndName[0] + "\n" + knownGroupIdAndName[1];
+                formattedGroupItemsArray[i] = "#" + knownGroupIdAndName[0] + Constantz.NEW_LINE + Stringz.wrap(knownGroupIdAndName[1]);
             }
 
             pickerItems = Arrayz.join(allGroupsItemArray, formattedGroupItemsArray);
         }
 
-        var title = new Ui.Text({:text=>Rez.Strings.groupPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.groupPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
         var factory = new WordPickerFactory(pickerItems, {:font=>Gfx.FONT_XTINY});
 
         Picker.initialize({:title=>title, :pattern=>[factory]});
@@ -51,10 +51,10 @@ class GroupPickerDelegate extends Ui.PickerDelegate {
     function onAccept(values) {
         var selectedGroup = null;
 
-        if(values[0].equals(Ui.loadResource(Rez.Strings.groupPickerAll))) {
+        if (values[0].equals(Ui.loadResource(Rez.Strings.groupPickerAll))) {
             selectedGroup = 0;
         } else {
-            var splitted = Stringz.split(values[0], "\n");
+            var splitted = Stringz.split(values[0], Constantz.NEW_LINE);
             selectedGroup = splitted[0].substring(1, splitted[0].length());
         }
 

@@ -17,7 +17,7 @@ class BrightnessPicker extends Ui.Picker {
             brightnessStep += STEP_BRIGHTNESS_VALUE;
         }
 
-        var title = new Ui.Text({:text=>Rez.Strings.brightnessPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.brightnessPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
         var factory = new WordPickerFactory(brightnessSteps, {:font=>Gfx.FONT_MEDIUM});
 
         Picker.initialize({:title=>title, :pattern=>[factory]});

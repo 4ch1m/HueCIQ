@@ -8,7 +8,7 @@ class ColorPicker extends Ui.Picker {
     var title;
 
     function initialize() {
-        title = new Ui.Text({:text=>Rez.Strings.colorPickerTitle, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.colorPickerTitle), :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
         factory = new ColorPickerFactory([Gfx.COLOR_RED, Gfx.COLOR_GREEN, Gfx.COLOR_BLUE, Gfx.COLOR_ORANGE, Gfx.COLOR_YELLOW, Gfx.COLOR_PURPLE]);
 
         var nextArrow = new Ui.Bitmap({:rezId=>Rez.Drawables.nextArrow});

@@ -31,7 +31,7 @@ class HueCIQView extends Ui.View {
         }
 
         var author = findDrawableById("author");
-        author.setText(Ui.loadResource(Rez.Strings.authorBy) + " " + Stringz.reverse(Ui.loadResource(Rez.Strings.Author)));
+        author.setText(Ui.loadResource(Rez.Strings.authorBy) + Constantz.BLANK + Stringz.reverse(Ui.loadResource(Rez.Strings.Author)));
         author.setLocation(author.locX, Sys.getDeviceSettings().screenHeight - 55);
 
         var version = findDrawableById("version");

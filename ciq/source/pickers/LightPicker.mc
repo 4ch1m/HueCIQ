@@ -16,15 +16,15 @@ class LightPicker extends Ui.Picker {
 
             var formattedLightItemsArray = new [knownLightItems.size()];
 
-            for(var i = 0; i < knownLightItems.size(); i++) {
+            for (var i = 0; i < knownLightItems.size(); i++) {
                 knownLightIdAndName = Stringz.split(knownLightItems[i], Constantz.ID_NAME_SEPARATOR);
-                formattedLightItemsArray[i] = "#" + knownLightIdAndName[0] + "\n" + knownLightIdAndName[1];
+                formattedLightItemsArray[i] = "#" + knownLightIdAndName[0] + Constantz.NEW_LINE + Stringz.wrap(knownLightIdAndName[1]);
             }
 
             pickerItems = formattedLightItemsArray;
         }
 
-        var title = new Ui.Text({:text=>Rez.Strings.lightPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.lightPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
         var factory = new WordPickerFactory(pickerItems, {:font=>Gfx.FONT_XTINY});
 
         Picker.initialize({:title=>title, :pattern=>[factory]});
@@ -48,8 +48,8 @@ class LightPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        if(!values[0].equals(Ui.loadResource(Rez.Strings.lightPickerNA))) {
-            var splitted = Stringz.split(values[0], "\n");
+        if (!values[0].equals(Ui.loadResource(Rez.Strings.lightPickerNA))) {
+            var splitted = Stringz.split(values[0], Constantz.NEW_LINE);
             var selectedLight = splitted[0].substring(1, splitted[0].length());
 
             App.getApp().setProperty("selected_id", selectedLight);

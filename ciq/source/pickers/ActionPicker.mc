@@ -2,9 +2,13 @@ using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
 class ActionPicker extends Ui.Picker {
+    static const ACTIONS = {"switch" => Stringz.wrap(Ui.loadResource(Rez.Strings.actionPickerSwitch)),
+                            "brightness" => Stringz.wrap(Ui.loadResource(Rez.Strings.actionPickerBrightness)),
+                            "color" => Stringz.wrap(Ui.loadResource(Rez.Strings.actionPickerColor))};
+
     function initialize() {
-        var title = new Ui.Text({:text=>Rez.Strings.actionPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
-        var factory = new WordPickerFactory([Rez.Strings.actionPickerSwitch, Rez.Strings.actionPickerBrightness, Rez.Strings.actionPickerColor], {:font=>Gfx.FONT_XTINY});
+        var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.actionPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        var factory = new WordPickerFactory([ACTIONS["switch"], ACTIONS["brightness"], ACTIONS["color"]], {:font=>Gfx.FONT_XTINY});
 
         Picker.initialize({:title=>title, :pattern=>[factory]});
     }
@@ -27,13 +31,15 @@ class ActionPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        if(values[0] == Rez.Strings.actionPickerSwitch) {
+        var acceptedValue = values[0];
+
+        if (acceptedValue == ActionPicker.ACTIONS["switch"]) {
             Ui.pushView(new SwitchPicker(), new SwitchPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
-        else if(values[0] == Rez.Strings.actionPickerBrightness) {
+        else if (acceptedValue == ActionPicker.ACTIONS["brightness"]) {
             Ui.pushView(new BrightnessPicker(), new BrightnessPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
-        else if(values[0] == Rez.Strings.actionPickerColor) {
+        else if (acceptedValue == ActionPicker.ACTIONS["color"]) {
             Ui.pushView(new ColorPicker(), new ColorPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
     }
