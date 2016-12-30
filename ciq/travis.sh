@@ -5,6 +5,8 @@
 
 SDK_URL="https://developer.garmin.com/downloads/connect-iq/sdks/connectiq-sdk-win-2.2.2.zip"
 
+cd ciq
+
 wget -O sdk.zip "${SDK_URL}"
 unzip sdk.zip -d "sdk"
 
