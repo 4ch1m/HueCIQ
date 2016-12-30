@@ -25,7 +25,7 @@ before_script:
     - sudo apt-get install -qq dos2unix
 script:
     - cd ciq
-    - travis-ciq.sh
+    - travis.sh
 after_script:
     - cd ../android
 
