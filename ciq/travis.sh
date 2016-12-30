@@ -12,4 +12,3 @@ export MB_HOME="sdk"
 export MB_PRIVATE_KEY="n/a"
 
 ./mb_runner.sh build
-
