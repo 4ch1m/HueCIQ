@@ -3,7 +3,7 @@
 # This is just a little helper-script to enable ConnectIQ-development on
 # UNIX-systems.
 #
-# Based on the (Windows) ConnectIQ SDK 2.2.1
+# Based on the (Windows) ConnectIQ SDK 2.2.2
 #
 # The following tasks can be invoked:
 #   * compiling (re)sources and building a PRG-file for testing
@@ -164,7 +164,7 @@ function clean
     rm -f "${PROJECT_HOME}/${APP_NAME}"*.prg*
     rm -f "${PROJECT_HOME}/${APP_NAME}"*.iq
     rm -f "${PROJECT_HOME}/${APP_NAME}"*.json
-    rm -f "${PROJECT_HOME}/${APP_NAME}/sys.nfm"
+    rm -f "${PROJECT_HOME}/sys.nfm"
 }
 
 function start_simulator
