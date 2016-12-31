@@ -1,5 +1,6 @@
 package de.achimonline.hueciq;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -438,6 +439,7 @@ public class Console extends ListActivity
         return true;
     }
 
+    @SuppressLint("WrongConstant")
     private void bindServiceConnection()
     {
         bindService(new Intent(Service.class.getName()), serviceConnection, MODE_PRIVATE);

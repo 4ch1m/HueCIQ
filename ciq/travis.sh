@@ -19,8 +19,6 @@ DER_FILE="/tmp/developer_key.der"
 
 ###
 
-cd ciq
-
 wget -O "${SDK_FILE}" "${SDK_URL}"
 unzip "${SDK_FILE}" "bin/*" -d "${SDK_DIR}"
 
