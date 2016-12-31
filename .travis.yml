@@ -25,6 +25,5 @@ before_script:
     - sudo apt-get install -qq dos2unix
 script:
     - ciq/travis.sh
-after_script:
-    - cd android; ./gradlew build
+    - cd android && ./gradlew build
 
