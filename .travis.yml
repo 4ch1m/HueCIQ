@@ -26,5 +26,5 @@ before_script:
 script:
     - ciq/travis.sh
 after_script:
-    - cd android
+    - cd android; ./gradlew build
 
