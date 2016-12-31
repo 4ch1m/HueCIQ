@@ -326,7 +326,7 @@ public class Console extends ListActivity
 
                     addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
-                    final Intent serviceIntent = new Intent(new Intent(Service.class.getName()));
+                    final Intent serviceIntent = new Intent(Service.class.getName());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, sharedPreferences.getHueLastConnectedIPAddress());
