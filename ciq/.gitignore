@@ -3,4 +3,5 @@
 releases
 *.prg*
 *-settings.json
+*.iq
 sys.nfm
