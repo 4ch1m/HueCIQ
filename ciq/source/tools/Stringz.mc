@@ -26,4 +26,21 @@ class Stringz {
 
        return resultArray;
     }
+
+    static function join(strings, separator) {
+        var joined = strings[0];
+
+        for (var i=1; i < strings.size(); i++) {
+            joined = joined + separator + strings[i];
+        }
+
+        return joined;
+    }
+
+    static function wrap(string) {
+        var split = Stringz.split(string, Constantz.BLANK);
+        var joined = Stringz.join(split, Constantz.NEW_LINE);
+
+        return joined;
+    }
 }

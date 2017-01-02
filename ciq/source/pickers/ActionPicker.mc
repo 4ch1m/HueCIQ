@@ -3,8 +3,8 @@ using Toybox.WatchUi as Ui;
 
 class ActionPicker extends Ui.Picker {
     function initialize() {
-        var title = new Ui.Text({:text=>Rez.Strings.actionPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
-        var factory = new WordPickerFactory([Rez.Strings.actionPickerSwitch, Rez.Strings.actionPickerBrightness, Rez.Strings.actionPickerColor], {:font=>Gfx.FONT_XTINY});
+        var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.actionPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        var factory = new ImagePickerFactory([Rez.Drawables.switches, Rez.Drawables.brightness, Rez.Drawables.palette]);
 
         Picker.initialize({:title=>title, :pattern=>[factory]});
     }
@@ -27,13 +27,15 @@ class ActionPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        if(values[0] == Rez.Strings.actionPickerSwitch) {
+        var acceptedValue = values[0];
+
+        if (acceptedValue == Rez.Drawables.switches) {
             Ui.pushView(new SwitchPicker(), new SwitchPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
-        else if(values[0] == Rez.Strings.actionPickerBrightness) {
+        else if (acceptedValue == Rez.Drawables.brightness) {
             Ui.pushView(new BrightnessPicker(), new BrightnessPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
-        else if(values[0] == Rez.Strings.actionPickerColor) {
+        else if (acceptedValue == Rez.Drawables.palette) {
             Ui.pushView(new ColorPicker(), new ColorPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
     }

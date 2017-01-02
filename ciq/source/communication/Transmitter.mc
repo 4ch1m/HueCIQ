@@ -1,7 +1,6 @@
 using Toybox.Communications as Comm;
 using Toybox.Graphics as Gfx;
 using Toybox.Attention as Att;
-using Toybox.System as Sys;
 
 class Transmitter {
     static const SWITCH_COMMAND_PREFIX = "switch_";
@@ -18,18 +17,18 @@ class Transmitter {
     static const COLOR_COMMAND_ORANGE = "orange";
     static const COLOR_COMMAND_PURPLE = "purple";
 
-    static const COMMAND_LIGHT_ID_SEPARATOR = "-";
+    static const COMMAND_ID_SEPARATOR = "-";
 
     static function switchOn(lightId) {
-        Comm.transmit(SWITCH_COMMAND_PREFIX + SWITCH_COMMAND_ON + COMMAND_LIGHT_ID_SEPARATOR + lightId, null, new TransmitListener());
+        Comm.transmit(SWITCH_COMMAND_PREFIX + SWITCH_COMMAND_ON + COMMAND_ID_SEPARATOR + lightId, null, new TransmitListener());
     }
 
     static function switchOff(lightId) {
-        Comm.transmit(SWITCH_COMMAND_PREFIX + SWITCH_COMMAND_OFF + COMMAND_LIGHT_ID_SEPARATOR + lightId, null, new TransmitListener());
+        Comm.transmit(SWITCH_COMMAND_PREFIX + SWITCH_COMMAND_OFF + COMMAND_ID_SEPARATOR + lightId, null, new TransmitListener());
     }
 
     static function setBrightness(lightId, value) {
-        Comm.transmit(BRIGHTNESS_COMMAND_PREFIX + value + COMMAND_LIGHT_ID_SEPARATOR + lightId, null, new TransmitListener());
+        Comm.transmit(BRIGHTNESS_COMMAND_PREFIX + value + COMMAND_ID_SEPARATOR + lightId, null, new TransmitListener());
     }
 
     static function setColor(lightId, value) {
@@ -54,7 +53,7 @@ class Transmitter {
             color = COLOR_COMMAND_RED;
         }
 
-        Comm.transmit(COLOR_COMMAND_PREFIX + color + COMMAND_LIGHT_ID_SEPARATOR + lightId, null, new TransmitListener());
+        Comm.transmit(COLOR_COMMAND_PREFIX + color + COMMAND_ID_SEPARATOR + lightId, null, new TransmitListener());
     }
 }
 
@@ -64,13 +63,13 @@ class TransmitListener extends Comm.ConnectionListener {
     }
 
     function onComplete() {
-        if (Sys.getDeviceSettings().tonesOn) {
+        if (Helperz.playTone()) {
             Att.playTone(Att.TONE_START);
         }
     }
 
     function onError() {
-        if (Sys.getDeviceSettings().tonesOn) {
+        if (Helperz.playTone()) {
             Att.playTone(Att.TONE_ALERT_LO);
         }
     }

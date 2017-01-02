@@ -1,5 +1,7 @@
+.idea
 *.iml
-.idea/
-gen/
-target/
-releases/
+releases
+*.prg*
+*-settings.json
+*.iq
+sys.nfm

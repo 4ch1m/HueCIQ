@@ -1,5 +1,6 @@
 *.iml
-.idea/
-gen/
-target/
-releases/
+.idea
+.gradle
+local.properties
+build
+releases

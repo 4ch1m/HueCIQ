@@ -2,14 +2,13 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
-using Toybox.System as Sys;
 
 class ColorPicker extends Ui.Picker {
     var factory;
     var title;
 
     function initialize() {
-        title = new Ui.Text({:text=>Rez.Strings.colorPickerTitle, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.colorPickerTitle), :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
         factory = new ColorPickerFactory([Gfx.COLOR_RED, Gfx.COLOR_GREEN, Gfx.COLOR_BLUE, Gfx.COLOR_ORANGE, Gfx.COLOR_YELLOW, Gfx.COLOR_PURPLE]);
 
         var nextArrow = new Ui.Bitmap({:rezId=>Rez.Drawables.nextArrow});
@@ -36,10 +35,10 @@ class ColorPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        if (Sys.getDeviceSettings().tonesOn) {
+        if (Helperz.playTone()) {
             Att.playTone(Att.TONE_KEY);
         }
 
-        Transmitter.setColor(App.getApp().getProperty("selected_light"), values[0]);
+        Transmitter.setColor(App.getApp().getProperty("selected_id"), values[0]);
     }
 }

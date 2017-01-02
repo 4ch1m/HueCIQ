@@ -2,7 +2,6 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
-using Toybox.System as Sys;
 
 class BrightnessPicker extends Ui.Picker {
     static const MIN_BRIGHTNESS_VALUE = 10;
@@ -12,12 +11,14 @@ class BrightnessPicker extends Ui.Picker {
     function initialize() {
         var brightnessSteps = new [ MAX_BRIGHTNESS_VALUE / STEP_BRIGHTNESS_VALUE ];
         var brightnessStep = MIN_BRIGHTNESS_VALUE;
+
         for (var i=0; i < (MAX_BRIGHTNESS_VALUE / STEP_BRIGHTNESS_VALUE); i+=1) {
-            brightnessSteps[i] = brightnessStep.toString();
+            brightnessSteps[i] = brightnessStep.toString() + Constantz.PERCENT;
             brightnessStep += STEP_BRIGHTNESS_VALUE;
         }
-        var title = new Ui.Text({:text=>Rez.Strings.brightnessPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
-        var factory = new WordPickerFactory(brightnessSteps, {:font=>Gfx.FONT_MEDIUM});
+
+        var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.brightnessPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        var factory = new WordPickerFactory(brightnessSteps, {:font=>Gfx.FONT_SMALL});
 
         Picker.initialize({:title=>title, :pattern=>[factory]});
     }
@@ -40,10 +41,12 @@ class BrightnessPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        if (Sys.getDeviceSettings().tonesOn) {
+        var acceptedValue = values[0];
+
+        if (Helperz.playTone()) {
             Att.playTone(Att.TONE_KEY);
         }
 
-        Transmitter.setBrightness(App.getApp().getProperty("selected_light"), values[0]);
+        Transmitter.setBrightness(App.getApp().getProperty("selected_id"), acceptedValue.substring(0, acceptedValue.length() - 1));
     }
 }

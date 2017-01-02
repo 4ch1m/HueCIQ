@@ -1,9 +1,3 @@
-**/.idea/
-**/*.iml
-**/.project
-**/out
-**/bin
-**/gen
-**/target
-**/releases
+.idea
+*.iml
 assets

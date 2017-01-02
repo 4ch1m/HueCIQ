@@ -3,32 +3,28 @@ using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
 class LightPicker extends Ui.Picker {
-    static const LIGHT_ITEM_SEPARATOR = "|";
-    static const LIGHT_ID_SEPARATOR = ";";
-
     function initialize() {
         var knownLights = App.getApp().getProperty("known_lights");
-        var allLightsItemArray = [Ui.loadResource(Rez.Strings.lightPickerAll)];
 
         var pickerItems;
 
-        if (knownLights == null || "" == knownLights || knownLights.find(LIGHT_ID_SEPARATOR) == null) {
-            pickerItems = allLightsItemArray;
+        if (knownLights == null || "" == knownLights || knownLights.find(Constantz.ID_NAME_SEPARATOR) == null) {
+            pickerItems = [Ui.loadResource(Rez.Strings.lightPickerNA)];
         } else {
-            var knownLightItems = Stringz.split(knownLights, LIGHT_ITEM_SEPARATOR);
+            var knownLightItems = Stringz.split(knownLights, Constantz.ITEM_SEPARATOR);
             var knownLightIdAndName;
 
             var formattedLightItemsArray = new [knownLightItems.size()];
 
-            for(var i = 0; i < knownLightItems.size(); i++) {
-                knownLightIdAndName = Stringz.split(knownLightItems[i], LIGHT_ID_SEPARATOR);
-                formattedLightItemsArray[i] = "#" + knownLightIdAndName[0] + "\n" + knownLightIdAndName[1];
+            for (var i = 0; i < knownLightItems.size(); i++) {
+                knownLightIdAndName = Stringz.split(knownLightItems[i], Constantz.ID_NAME_SEPARATOR);
+                formattedLightItemsArray[i] = "#" + knownLightIdAndName[0] + Constantz.NEW_LINE + Stringz.wrap(knownLightIdAndName[1]);
             }
 
-            pickerItems = Arrayz.join(allLightsItemArray, formattedLightItemsArray);
+            pickerItems = formattedLightItemsArray;
         }
 
-        var title = new Ui.Text({:text=>Rez.Strings.lightPickerTitle, :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
+        var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.lightPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
         var factory = new WordPickerFactory(pickerItems, {:font=>Gfx.FONT_XTINY});
 
         Picker.initialize({:title=>title, :pattern=>[factory]});
@@ -52,17 +48,13 @@ class LightPickerDelegate extends Ui.PickerDelegate {
     }
 
     function onAccept(values) {
-        var selectedLight = null;
+        if (!values[0].equals(Ui.loadResource(Rez.Strings.lightPickerNA))) {
+            var splitted = Stringz.split(values[0], Constantz.NEW_LINE);
+            var selectedLight = splitted[0].substring(1, splitted[0].length());
 
-        if(values[0].equals(Ui.loadResource(Rez.Strings.lightPickerAll))) {
-            selectedLight = 0;
-        } else {
-            var splitted = Stringz.split(values[0], "\n");
-            selectedLight = splitted[0].substring(1, splitted[0].length());
+            App.getApp().setProperty("selected_id", selectedLight);
+
+            Ui.pushView(new ActionPicker(), new ActionPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
-
-        App.getApp().setProperty("selected_light", selectedLight);
-
-        Ui.pushView(new ActionPicker(), new ActionPickerDelegate(), Ui.SLIDE_IMMEDIATE);
     }
 }

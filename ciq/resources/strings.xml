@@ -1,23 +1,17 @@
 <strings>
     <string id="AppName">HueCIQ</string>
-    <string id="AppVersion">v2.9</string>
+    <string id="AppVersion">v4.0</string>
     <string id="Author">trefueS mihcA</string>
-
+    <!-- *** -->
 	<string id="authorBy">by</string>
-
+    <string id="targetPickerTitle">Target</string>
     <string id="lightPickerTitle">Light</string>
-    <string id="lightPickerAll">[ All ]</string>
-    
+    <string id="lightPickerNA">---</string>
+    <string id="groupPickerTitle">Group</string>
+    <string id="groupPickerAll">[ All ]</string>
     <string id="actionPickerTitle">Action</string>
-    <string id="actionPickerSwitch">On/Off</string>
-    <string id="actionPickerBrightness">Brightness</string>
-    <string id="actionPickerColor">Color</string>
-
     <string id="switchPickerTitle">On/Off</string>
-    <string id="switchPickerOn">On</string>
-    <string id="switchPickerOff">Off</string>
-
     <string id="brightnessPickerTitle">Brightness</string>
-    
     <string id="colorPickerTitle">Color</string>
+    <string id="playTonesTitle">Play Tones</string>
 </strings>
