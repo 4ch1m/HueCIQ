@@ -7,9 +7,9 @@ android {
     defaultConfig {
         applicationId "de.achimonline.hueciq"
         minSdkVersion 11
-        targetSdkVersion 11
-        versionCode 16
-        versionName "4.0"
+        targetSdkVersion 25
+        versionCode 17
+        versionName "4.0.1"
     }
 
     if (project.hasProperty('RELEASE_STORE_FILE')) {
