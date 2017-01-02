@@ -4,12 +4,9 @@ using Toybox.WatchUi as Ui;
 using Toybox.Attention as Att;
 
 class SwitchPicker extends Ui.Picker {
-    static const SWITCHES = {"on" => Stringz.wrap(Ui.loadResource(Rez.Strings.switchPickerOn)),
-                             "off" => Stringz.wrap(Ui.loadResource(Rez.Strings.switchPickerOff))};
-
     function initialize() {
         var title = new Ui.Text({:text=>Ui.loadResource(Rez.Strings.switchPickerTitle), :locX =>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color=>Gfx.COLOR_WHITE});
-        var factory = new WordPickerFactory([SWITCHES["on"], SWITCHES["off"]], {:font=>Gfx.FONT_MEDIUM});
+        var factory = new ImagePickerFactory([Rez.Drawables.on, Rez.Drawables.off]);
 
         Picker.initialize({:title=>title, :pattern=>[factory]});
     }
@@ -38,7 +35,7 @@ class SwitchPickerDelegate extends Ui.PickerDelegate {
 
         var selectedId = App.getApp().getProperty("selected_id");
 
-        if (values[0] == SwitchPicker.SWITCHES["on"]) {
+        if (values[0] == Rez.Drawables.on) {
             Transmitter.switchOn(selectedId);
         } else {
             Transmitter.switchOff(selectedId);

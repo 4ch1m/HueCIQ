@@ -1,5 +1,0 @@
-<resources>
-    <bitmap id="nextArrow" filename="images/next_arrow.png" />
-    <bitmap id="previousArrow" filename="images/previous_arrow.png" />
-    <bitmap id="brush" filename="images/brush.png" dithering="none" />
-</resources>

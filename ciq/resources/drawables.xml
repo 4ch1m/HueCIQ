@@ -1,3 +1,18 @@
 <drawables>
-    <bitmap id="LauncherIcon" filename="images/launcher_icon.png" />
+    <bitmap id="launcherIcon" filename="images/launcher_icon.png" dithering="none" />
+    <!-- *** -->
+    <bitmap id="singleBulb" filename="images/targetpicker/single_bulb.png" dithering="none" />
+    <bitmap id="bulbGroup" filename="images/targetpicker/bulb_group.png" dithering="none" />
+    <!-- *** -->
+    <bitmap id="switches" filename="images/actionpicker/switches.png" dithering="none" />
+    <bitmap id="brightness" filename="images/actionpicker/brightness.png" dithering="none" />
+    <bitmap id="palette" filename="images/actionpicker/palette.png" dithering="none" />
+    <!-- *** -->
+    <bitmap id="on" filename="images/switchpicker/on.png" dithering="none" />
+    <bitmap id="off" filename="images/switchpicker/off.png" dithering="none" />
+    <!-- *** -->
+    <bitmap id="nextArrow" filename="images/colorpicker/next_arrow.png" dithering="none" />
+    <bitmap id="previousArrow" filename="images/colorpicker/previous_arrow.png" dithering="none" />
+    <bitmap id="brush" filename="images/colorpicker/brush.png" dithering="none" />
+
 </drawables>
