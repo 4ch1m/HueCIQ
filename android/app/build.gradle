@@ -8,8 +8,8 @@ android {
         applicationId "de.achimonline.hueciq"
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 17
-        versionName "4.0.1"
+        versionCode 18
+        versionName "4.0.2"
     }
 
     if (project.hasProperty('RELEASE_STORE_FILE')) {

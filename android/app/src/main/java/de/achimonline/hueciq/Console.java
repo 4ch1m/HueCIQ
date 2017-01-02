@@ -251,7 +251,7 @@ public class Console extends ListActivity
     {
         try
         {
-            stopService(new Intent(Service.class.getName()));
+            stopService(getServiceIntent());
         }
         catch (Exception e)
         {
@@ -326,7 +326,7 @@ public class Console extends ListActivity
 
                     addToActionLog(String.format(getString(R.string.action_log_app_found), getString(R.string.app_name), iqDevice.getFriendlyName()));
 
-                    final Intent serviceIntent = new Intent(Service.class.getName());
+                    final Intent serviceIntent = getServiceIntent();
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_IDENTIFIER, iqDevice.getDeviceIdentifier());
                     serviceIntent.putExtra(Service.EXTRA_IQDEVICE_NAME, iqDevice.getFriendlyName());
                     serviceIntent.putExtra(Service.EXTRA_PHHUE_IP_ADDRESS, sharedPreferences.getHueLastConnectedIPAddress());
@@ -442,7 +442,7 @@ public class Console extends ListActivity
     @SuppressLint("WrongConstant")
     private void bindServiceConnection()
     {
-        bindService(new Intent(Service.class.getName()), serviceConnection, MODE_PRIVATE);
+        bindService(getServiceIntent(), serviceConnection, MODE_PRIVATE);
     }
 
     private void sanitize()
@@ -463,6 +463,14 @@ public class Console extends ListActivity
                 actionLogAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private Intent getServiceIntent()
+    {
+        final Intent serviceIntent = new Intent(Service.class.getName());
+        serviceIntent.setPackage(Service.class.getPackage().getName());
+
+        return serviceIntent;
     }
 
     private class ActionLogAdapter extends ArrayAdapter<String>
