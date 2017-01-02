@@ -14,5 +14,4 @@
     <bitmap id="nextArrow" filename="images/colorpicker/next_arrow.png" dithering="none" />
     <bitmap id="previousArrow" filename="images/colorpicker/previous_arrow.png" dithering="none" />
     <bitmap id="brush" filename="images/colorpicker/brush.png" dithering="none" />
-
 </drawables>

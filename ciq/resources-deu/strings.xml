@@ -1,21 +1,13 @@
 <strings>
     <string id="authorBy">von</string>
-
     <string id="targetPickerTitle">Ziel</string>
-
     <string id="lightPickerTitle">Lampe</string>
     <string id="lightPickerNA">---</string>
-
     <string id="groupPickerTitle">Group</string>
     <string id="groupPickerAll">[ Alle ]</string>
-
     <string id="actionPickerTitle">Aktion</string>
-
     <string id="switchPickerTitle">An/Aus</string>
-
     <string id="brightnessPickerTitle">Helligkeit</string>
-
     <string id="colorPickerTitle">Farbe</string>
-
     <string id="playTonesTitle">Töne Abspielen</string>
 </strings>
