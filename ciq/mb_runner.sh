@@ -43,6 +43,8 @@ fi
 case "${1}" in
    build)
       ;;
+   test)
+      ;;
    package)
       ;;
    clean)
@@ -52,7 +54,7 @@ case "${1}" in
    push)
       ;;
    *)
-      echo "Usage: `basename ${0}` {build|package|clean|simulator|push}"
+      echo "Usage: `basename ${0}` {build|test|package|clean|simulator|push}"
       exit 1
       ;;
 esac
@@ -157,6 +159,11 @@ function run_mb_jar
     java -jar "${MB_HOME}/bin/monkeybrains.jar" ${PARAMS} ${SOURCES}
 }
 
+function run_tests
+{
+    "${MB_HOME}/bin/monkeydo" "${PROJECT_HOME}/${APP_NAME}.prg" -t
+}
+
 function clean
 {
     cd ${PROJECT_HOME}
@@ -193,6 +200,11 @@ case "${1}" in
    build)
         concat_params_for_build
         run_mb_jar
+        ;;
+   test)
+        concat_params_for_build
+        run_mb_jar
+        run_tests
         ;;
    package)
         concat_params_for_package
