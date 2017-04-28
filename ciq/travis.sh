@@ -9,7 +9,7 @@
 
 ###
 
-SDK_URL="https://developer.garmin.com/downloads/connect-iq/sdks/connectiq-sdk-win-2.2.2.zip"
+SDK_URL="https://developer.garmin.com/downloads/connect-iq/sdks/connectiq-sdk-win-2.2.5.zip"
 
 SDK_FILE="sdk.zip"
 SDK_DIR="sdk"
@@ -28,4 +28,4 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in "${PEM_FILE}" -out "${DER_FILE
 export MB_HOME="${SDK_DIR}"
 export MB_PRIVATE_KEY="${DER_FILE}"
 
-./mb_runner.sh package
+./mb_runner/mb_runner.sh package
