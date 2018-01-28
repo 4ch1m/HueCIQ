@@ -25,6 +25,7 @@ class ColorPickerFactory extends Ui.PickerFactory {
 
     function getDrawable(index, selected) {
         mColorWheel.setColor(index);
+
         return mColorWheel;
     }
 }
@@ -36,18 +37,18 @@ class ColorWheel extends Ui.Drawable {
     function initialize(options) {
         Drawable.initialize(options);
         mColors = options[:colors];
+
         if(options.hasKey(:index)) {
             mIndex = options[:index];
-        }
-        else {
+        } else {
             mIndex = 0;
         }
     }
 
     function draw(dc) {
         var index = mIndex;
-        var angle = ( Math.PI * 2 ) / mColors.size();
-        var startAngle = Math.PI * ( 3 / 2.0 ) - ( angle / 2.0 );
+        var angle = (Math.PI * 2) / mColors.size();
+        var startAngle = Math.PI * (3 / 2.0) - (angle / 2.0);
 
         // draw the wheel
         for(var i = 0; i < mColors.size(); ++i) {
@@ -56,13 +57,13 @@ class ColorWheel extends Ui.Drawable {
             }
 
             dc.setColor(mColors[index], mColors[index]);
-            drawArc(dc, dc.getHeight()/2, dc.getWidth()/2, dc.getHeight() / 2 - 5, (i * angle) + startAngle, ((i + 1 ) * angle) + startAngle, true);
+            drawArc(dc, dc.getHeight() / 2, dc.getWidth() / 2, dc.getHeight() / 2 - 5, (i * angle) + startAngle, ((i + 1) * angle) + startAngle, true);
             ++index;
         }
 
         // highlight the selected one
         dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_WHITE);
-        drawArc(dc, dc.getHeight()/2, dc.getWidth()/2, dc.getHeight() / 2 - 5, startAngle, startAngle + angle, false);
+        drawArc(dc, dc.getHeight() / 2, dc.getWidth() / 2, dc.getHeight() / 2 - 5, startAngle, startAngle + angle, false);
     }
 
     function drawArc(dc, centerX, centerY, radius, startAngle, endAngle, fill) {
@@ -71,19 +72,21 @@ class ColorWheel extends Ui.Drawable {
         var halfWidth = dc.getWidth() / 2;
         var radius = ( halfHeight > halfWidth ) ? halfWidth : halfHeight;
         var arcSize = points.size() - 2;
+
         for(var i = arcSize; i >= 0; --i) {
-            var angle = ( i / arcSize.toFloat() ) * ( endAngle - startAngle ) + startAngle;
+            var angle = (i / arcSize.toFloat()) * (endAngle - startAngle) + startAngle;
             points[i] = [halfWidth + radius * Math.cos(angle), halfHeight + radius * Math.sin(angle)];
         }
+
         points[points.size() - 1] = [halfWidth, halfHeight];
 
-        if(fill) {
+        if (fill) {
             dc.fillPolygon(points);
-        }
-        else {
+        } else {
             for(var i = 0; i < points.size() - 1; ++i) {
                 dc.drawLine(points[i][0], points[i][1], points[i+1][0], points[i+1][1]);
             }
+
             dc.drawLine(points[points.size()-1][0], points[points.size()-1][1], points[0][0], points[0][1]);
         }
     }
@@ -106,6 +109,7 @@ class ColorWheel extends Ui.Drawable {
                 return i;
             }
         }
+
         return -1;
     }
 }

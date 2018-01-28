@@ -31,8 +31,7 @@ class TargetPickerDelegate extends Ui.PickerDelegate {
 
         if (acceptedValue == Rez.Drawables.singleBulb) {
             Ui.pushView(new LightPicker(), new LightPickerDelegate(), Ui.SLIDE_IMMEDIATE);
-        }
-        else if (acceptedValue == Rez.Drawables.bulbGroup) {
+        } else if (acceptedValue == Rez.Drawables.bulbGroup) {
             Ui.pushView(new GroupPicker(), new GroupPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
     }

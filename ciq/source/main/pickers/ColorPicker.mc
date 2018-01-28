@@ -21,6 +21,7 @@ class ColorPicker extends Ui.Picker {
     function onUpdate(dc) {
         dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
         dc.clear();
+
         Picker.onUpdate(dc);
     }
 }
