@@ -20,15 +20,14 @@ class WordPickerFactory extends Ui.PickerFactory {
     }
 
     function getIndex(value) {
-        if(value instanceof String) {
-            for(var i = 0; i < mWords.size(); ++i) {
+        if (value instanceof String) {
+            for (var i = 0; i < mWords.size(); ++i) {
                 if(value.equals(Ui.loadResource(mWords[i]))) {
                     return i;
                 }
             }
-        }
-        else {
-            for(var i = 0; i < mWords.size(); ++i) {
+        } else {
+            for (var i = 0; i < mWords.size(); ++i) {
                 if(mWords[i].equals(value)) {
                     return i;
                 }

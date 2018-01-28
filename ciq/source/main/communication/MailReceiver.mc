@@ -28,11 +28,9 @@ class MailReceiver {
             if (latestMail != null) {
                 storeMailContent(latestMail);
             }
-        }
-        catch( ex ) {
+        } catch( ex ) {
             // do nothing ...
-        }
-        finally {
+        } finally {
             Comm.emptyMailbox();
         }
     }

@@ -31,11 +31,9 @@ class ActionPickerDelegate extends Ui.PickerDelegate {
 
         if (acceptedValue == Rez.Drawables.switches) {
             Ui.pushView(new SwitchPicker(), new SwitchPickerDelegate(), Ui.SLIDE_IMMEDIATE);
-        }
-        else if (acceptedValue == Rez.Drawables.brightness) {
+        } else if (acceptedValue == Rez.Drawables.brightness) {
             Ui.pushView(new BrightnessPicker(), new BrightnessPickerDelegate(), Ui.SLIDE_IMMEDIATE);
-        }
-        else if (acceptedValue == Rez.Drawables.palette) {
+        } else if (acceptedValue == Rez.Drawables.palette) {
             Ui.pushView(new ColorPicker(), new ColorPickerDelegate(), Ui.SLIDE_IMMEDIATE);
         }
     }

@@ -36,20 +36,15 @@ class Transmitter {
 
         if (value == Gfx.COLOR_GREEN) {
             color = COLOR_COMMAND_GREEN;
-        }
-        else if (value == Gfx.COLOR_BLUE) {
+        } else if (value == Gfx.COLOR_BLUE) {
             color = COLOR_COMMAND_BLUE;
-        }
-        else if (value == Gfx.COLOR_ORANGE) {
+        } else if (value == Gfx.COLOR_ORANGE) {
             color = COLOR_COMMAND_ORANGE;
-        }
-        else if (value == Gfx.COLOR_YELLOW) {
+        } else if (value == Gfx.COLOR_YELLOW) {
             color = COLOR_COMMAND_YELLOW;
-        }
-        else if (value == Gfx.COLOR_PURPLE) {
+        } else if (value == Gfx.COLOR_PURPLE) {
             color = COLOR_COMMAND_PURPLE;
-        }
-        else {
+        } else {
             color = COLOR_COMMAND_RED;
         }
 
