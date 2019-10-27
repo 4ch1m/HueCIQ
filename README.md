@@ -11,7 +11,7 @@ see: [Deprecation – Philips Hue SDK](https://developers.meethue.com/deprecatio
 Control your **Philips Hue Lighting System** via **Garmin Connect IQ**
 
 Please visit my dedicated website for detailed information:
-* [hueciq.achimonline.de](http://hueciq.achimonline.de)
+* [~~hueciq.achimonline.de~~](http://hueciq.achimonline.de)
 
 ## Continuous Integration
 Branch | Status
