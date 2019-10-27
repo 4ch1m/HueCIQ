@@ -1,3 +1,12 @@
+# DISCONTINUED
+
+```diff
+- NOTE: This project is discontinued due to deprecation of the Philips Hue SDK. 
+```
+see: [Deprecation – Philips Hue SDK](https://developers.meethue.com/deprecation-philips-hue-sdk/)
+
+---
+
 # HueCIQ
 Control your **Philips Hue Lighting System** via **Garmin Connect IQ**
 
