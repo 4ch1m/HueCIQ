@@ -9,7 +9,7 @@
 
 ###
 
-SDK_URL="https://developer.garmin.com/downloads/connect-iq/sdks/connectiq-sdk-lin-2.4.2.zip"
+SDK_URL="https://developer.garmin.com/downloads/connect-iq/sdks/connectiq-sdk-lin-3.1.6-2019-10-23-2de4665c6.zip"
 
 SDK_FILE="sdk.zip"
 SDK_DIR="sdk"
