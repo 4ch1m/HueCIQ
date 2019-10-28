@@ -17,7 +17,6 @@ Please visit my dedicated website for detailed information:
 Branch | Status
 :------: | :------:
 master | [![Build Status](https://travis-ci.org/4ch1m/HueCIQ.svg?branch=master)](https://travis-ci.org/4ch1m/HueCIQ)
-development | [![Build Status](https://travis-ci.org/4ch1m/HueCIQ.svg?branch=development)](https://travis-ci.org/4ch1m/HueCIQ)
 
 ## Additional Links
 * [Connect IQ Store](https://apps.garmin.com/en-US/apps/db18ce76-bcdc-4c29-852c-3af9a8caed1d)
